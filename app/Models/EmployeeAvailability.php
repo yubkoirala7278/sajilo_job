@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class EmployeeAvailability extends Model
 {
     use HasFactory;
-    protected $fillable = ['slug', 'category', 'status'];
+    protected $fillable = ['slug', 'name', 'status'];
 
     protected static function boot()
     {

@@ -8,7 +8,51 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     use HasFactory;
-    protected $fillable = ['mobile_no', 'job_categories_id', 'user_id'];
+    protected $fillable = [
+        'user_id',
+        'job_level',
+        'expected_salary_currency',
+        'expected_salary_operator',
+        'expected_salary',
+        'expected_salary_unit',
+        'current_salary_currency',
+        'current_salary_operator',
+        'current_salary',
+        'current_salary_unit',
+        'career_objective_summary',
+        'gender',
+        'date_of_birth',
+        'marital_status',
+        'religion_id',
+        'is_disabled',
+        'nationality',
+        'resume',
+        'current_address',
+        'permanent_address',
+        'contact_number',
+
+        'degree_id',
+        'course_id',
+        'board_or_university',
+        'school_or_college_or_institute',
+        'is_currently_studying',
+        'grade_type',
+        'mark_secured',
+        'graduation_year',
+        'graduation_month',
+        'education_started_year',
+        'education_started_month',
+        'willing_to_travel',
+        'willing_to_relocate',
+        'two_wheeler_license',
+        'four_wheeler_license',
+        'own_two_wheeler',
+        'own_four_wheeler'
+    ];
+
+    protected $casts = [
+        'date_of_birth' => 'date', // Ensures it's treated as a Carbon instance
+    ];
 
     // Relationship with job categories
     public function jobCategories()
@@ -23,7 +67,7 @@ class Employee extends Model
     }
 
     // Relationship with job titles
-    public function jobTitles()
+    public function preferredJobTitles()
     {
         return $this->belongsToMany(JobTitle::class, 'employee_job_title');
     }

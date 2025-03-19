@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
             EmployeeSpecializationsSeeder::class,
             EmployeeSkillsSeeder::class,
             JobPreferenceLocationSeeder::class,
+            ReligionSeeder::class,
+            DegreeCourseSeeder::class,
+            OrganizationNatureSeeder::class,
         ]);
     }
 }
