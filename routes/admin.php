@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\EmployeeSpecializationController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\JobCategoryController;
 use App\Http\Controllers\admin\JobPreferenceLocationController;
+use App\Http\Controllers\admin\JobSeekerManagementController;
 use App\Http\Controllers\admin\JobTitleController;
 use App\Http\Controllers\admin\OrganizationNatureController;
 use App\Http\Controllers\admin\PreferredIndustryController;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/home', [HomeController::class, 'index'])->name('admin.home');
 
 
-// employee
+// =============employee============
 Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/employee_profile', [EmployeeController::class, 'index'])->name('admin.employee.profile');
     Route::put('/update_employee_job_preferences', [EmployeeController::class, 'updateJobPreferences'])->name('update.employee.job.preferences');
@@ -34,7 +35,17 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
 });
 
 
+// ==================admin===========
 Route::middleware(['auth', 'role:admin'])->group(function () {
+    // job seekers
+    Route::group(['prefix' => 'job-seeker'], function () {
+        Route::get('/management', [JobSeekerManagementController::class, 'index'])->name('job.seeker.management');
+        Route::get('/management/data', [JobSeekerManagementController::class, 'getData'])->name('job.seeker.data');
+        Route::delete('/management/delete/{id}', [JobSeekerManagementController::class, 'destroy'])->name('job.seeker.delete');
+        Route::put('/management/status/{id}', [JobSeekerManagementController::class, 'changeStatus'])->name('job.seeker.status');
+        Route::get('/management/view/{id}', [JobSeekerManagementController::class, 'view'])->name('job.seeker.view');
+        Route::get('/management/cv/{id}', [JobSeekerManagementController::class, 'viewCV'])->name('job.seeker.cv');
+    });
     Route::resources([
         'job_category' => JobCategoryController::class,
         'technical_skill' => TechnicalSkillController::class,

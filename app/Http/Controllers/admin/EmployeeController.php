@@ -186,6 +186,21 @@ class EmployeeController extends Controller
                 $pathName = $request->file('resume')->store('resumes', 'public');
             }
 
+             // Handle profile upload if provided
+             $profilePath = null;
+            if ($request->hasFile('profile')) {
+                // Find the employee record
+                $employee = Employee::where('user_id', $user->id)->first();
+
+                // Delete existing profile if it exists
+                if ($employee && $employee->profile) {
+                    Storage::disk('public')->delete($employee->profile);
+                }
+
+                // Store the new profile in the 'profiles' folder inside 'storage/app/public'
+                $profilePath = $request->file('profile')->store('profiles', 'public');
+            }
+
             // Update user name
             $user->update([
                 'name' => $request->name
@@ -202,7 +217,8 @@ class EmployeeController extends Controller
                     'religion_id' => $request->religion,
                     'is_disabled' => $request->has('is_disabled'),
                     'nationality' => $request->nationality,
-                    'resume' => $pathName, // Store the path of the uploaded file
+                    'resume' => $pathName,
+                    'profile'=>$profilePath,
                     'current_address' => $request->current_address,
                     'permanent_address' => $request->permanent_address,
                     'contact_number' => $request->contact_number,
@@ -317,7 +333,7 @@ class EmployeeController extends Controller
                     'job_title' => $request->job_title[$index],
                     'job_level' => $request->job_level[$index],
                     'started_date' => $request->started_date[$index],
-                    'end_date' => $request->is_currently_working[$index] ? null : ($request->end_date[$index] ?? null),
+                    'end_date' => $request->is_currently_working ? null : ($request->end_date[$index] ?? null),
                     'duties_and_responsibilities' => $request->duties_and_responsibilities[$index],
                     'is_currently_working' => isset($request->is_currently_working[$index]) ? true : false,
                     'organization_nature_id' => (int) $request->nature_of_organization[$index],
@@ -347,13 +363,13 @@ class EmployeeController extends Controller
                 'language' => 'required|array',
                 'language.*' => 'required|string|max:255',
                 'reading' => 'required|array',
-                'reading.*' => 'required|string|in:very_poor,poor,average,good,very_good',
+                'reading.*' => 'required|string',
                 'writing' => 'required|array',
-                'writing.*' => 'required|string|in:very_poor,poor,average,good,very_good',
+                'writing.*' => 'required|string',
                 'speaking' => 'required|array',
-                'speaking.*' => 'required|string|in:very_poor,poor,average,good,very_good',
+                'speaking.*' => 'required|string',
                 'listening' => 'required|array',
-                'listening.*' => 'required|string|in:very_poor,poor,average,good,very_good',
+                'listening.*' => 'required|string',
             ]);
 
             // Delete existing language records for the employee if they exist

@@ -30,6 +30,7 @@ class UpdateEmployeeBasicInformation extends FormRequest
             'is_disabled' => 'nullable',
             'nationality' => 'nullable|string',
             'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048', // Validate resume
+            'profile'=>'nullable|image|max:2048', // Validate resume
             'current_address' => 'nullable|string',
             'permanent_address' => 'nullable|string',
             'contact_number' => 'nullable|string',

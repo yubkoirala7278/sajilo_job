@@ -221,17 +221,17 @@
                                                         <select name="job_level" class="form-select" required
                                                             id="job_level">
                                                             <option selected disabled>---------</option>
-                                                            <option value="top_level"
-                                                                @if ($employee && $employee->job_level == 'top_level') selected @endif>Top Level
+                                                            <option value="Top Level"
+                                                                @if ($employee && $employee->job_level == 'Top Level') selected @endif>Top Level
                                                             </option>
-                                                            <option value="senior_level"
-                                                                @if ($employee && $employee->job_level == 'senior_level') selected @endif>Senior
+                                                            <option value="Senior Level"
+                                                                @if ($employee && $employee->job_level == 'Senior Level') selected @endif>Senior
                                                                 Level</option>
-                                                            <option value="mid_level"
-                                                                @if ($employee && $employee->job_level == 'mid_level') selected @endif>Mid Level
+                                                            <option value="Mid Level"
+                                                                @if ($employee && $employee->job_level == 'Mid Level') selected @endif>Mid Level
                                                             </option>
-                                                            <option value="entry_level"
-                                                                @if ($employee && $employee->job_level == 'entry_level') selected @endif>Entry
+                                                            <option value="Entry Level"
+                                                                @if ($employee && $employee->job_level == 'Entry Level') selected @endif>Entry
                                                                 Level</option>
                                                         </select>
 
@@ -676,6 +676,19 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="row mb-3" id="div_id_profile">
+                                                    <label for="id_profile" class="col-form-label col-sm-3 text-sm-end">
+                                                        Profile Image
+                                                    </label>
+                                                    <div class="col-sm-8">
+                                                        <input type="file" name="profile" accept=".pdf,.jpg"
+                                                            class="form-control" id="id_profile">
+                                                        <small id="hint_id_profile" class="form-text text-muted">
+                                                            Upload your pp size photo in .pdf or .jpg format less than 2 MB.
+                                                        </small>
+                                                    </div>
+                                                </div>
+
                                                 <div class="row mb-3" id="div_id_address">
                                                     <label for="current_address"
                                                         class="col-form-label col-sm-3 text-sm-end requiredField">
@@ -897,32 +910,20 @@
 
                                                                 </div>
                                                                 <div class="col-6" id="div_id_form-0-month">
-                                                                    <select name="graduation_month" class="form-select"
-                                                                        id="graduation_month">
-                                                                        <option value="" disabled
-                                                                            {{ old('graduation_month', optional($employee)->graduation_month) == null ? 'selected' : '' }}>
-                                                                            Select Month</option>
+                                                                    <select name="graduation_month" class="form-select" id="graduation_month">
+                                                                        <option value="" disabled {{ old('graduation_month', optional($employee)->graduation_month) == null ? 'selected' : '' }}>
+                                                                            Select Month
+                                                                        </option>
                                                                         @foreach ([
-            1 => 'January',
-            2 => 'February',
-            3 => 'March',
-            4 => 'April',
-            5 => 'May',
-            6 => 'June',
-            7 => 'July',
-            8 => 'August',
-            9 => 'September',
-            10 => 'October',
-            11 => 'November',
-            12 => 'December',
-        ] as $num => $month)
-                                                                            <option value="{{ $num }}"
-                                                                                {{ old('graduation_month', optional($employee)->graduation_month) == $num ? 'selected' : '' }}>
+                                                                            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
+                                                                            'September', 'October', 'November', 'December'
+                                                                        ] as $index => $month)
+                                                                            <option value="{{ $month }}" 
+                                                                                {{ old('graduation_month', optional($employee)->graduation_month) == $month ? 'selected' : '' }}>
                                                                                 {{ $month }}
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -942,32 +943,20 @@
 
                                                                 </div>
                                                                 <div class="col-6" id="div_id_form-0-month">
-                                                                    <select name="education_started_month"
-                                                                        class="form-select" id="education_started_month">
-                                                                        <option value="" disabled selected
-                                                                            {{ old('education_started_month', optional($employee)->education_started_month) == null ? 'selected' : '' }}>
-                                                                            Select Month</option>
+                                                                    <select name="education_started_month" class="form-select" id="education_started_month">
+                                                                        <option value="" disabled selected {{ old('education_started_month', optional($employee)->education_started_month) == null ? 'selected' : '' }}>
+                                                                            Select Month
+                                                                        </option>
                                                                         @foreach ([
-            1 => 'January',
-            2 => 'February',
-            3 => 'March',
-            4 => 'April',
-            5 => 'May',
-            6 => 'June',
-            7 => 'July',
-            8 => 'August',
-            9 => 'September',
-            10 => 'October',
-            11 => 'November',
-            12 => 'December',
-        ] as $num => $month)
-                                                                            <option value="{{ $num }}"
-                                                                                {{ old('education_started_month', optional($employee)->education_started_month) == $num ? 'selected' : '' }}>
+                                                                            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
+                                                                            'September', 'October', 'November', 'December'
+                                                                        ] as $month)
+                                                                            <option value="{{ $month }}"
+                                                                                {{ old('education_started_month', optional($employee)->education_started_month) == $month ? 'selected' : '' }}>
                                                                                 {{ $month }}
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1210,7 +1199,8 @@
                                 Work Experience > <strong class="ms-1">Add Experience</strong>
                             </div>
 
-                            <form id="experienceForm" method="POST" class="mt-3" action="{{ route('update.employee.experience') }}">
+                            <form id="experienceForm" method="POST" class="mt-3"
+                                action="{{ route('update.employee.experience') }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="card-body">
@@ -1219,31 +1209,38 @@
                                             <div class="col-12">
                                                 <div id="formset-container-experience">
                                                     @forelse($employee_experiences as $index => $experience)
-                                                        <div class="formset-form location-form" data-cnt="form-{{ $index }}">
+                                                        <div class="formset-form location-form"
+                                                            data-cnt="form-{{ $index }}">
                                                             <!-- Hidden ID field to track existing records -->
-                                                            <input type="hidden" name="experience_id[]" value="{{ $experience->id }}">
-                            
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-org_name">
+                                                            <input type="hidden" name="experience_id[]"
+                                                                value="{{ $experience->id }}">
+
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-org_name">
                                                                 <label for="organization_name_{{ $index }}"
                                                                     class="col-form-label col-sm-3 text-sm-end requiredField">
-                                                                    Organization name<span class="text-danger">*</span>
+                                                                    Company name<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
                                                                     <input type="text" name="organization_name[]"
                                                                         maxlength="255" class="form-control" required
-                                                                        placeholder="Enter your organization name"
+                                                                        placeholder="Enter your company name"
                                                                         value="{{ $experience->organization_name }}">
                                                                 </div>
                                                             </div>
-                            
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-industry">
+
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-industry">
                                                                 <label for="nature_of_organization_{{ $index }}"
                                                                     class="col-form-label col-sm-3 text-sm-end requiredField">
-                                                                    Nature of Organization<span class="text-danger">*</span>
+                                                                    Nature of Organization<span
+                                                                        class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
-                                                                    <select name="nature_of_organization[]" class="form-select selectized" required>
-                                                                        <option value="" {{ !$experience->organization_nature_id ? 'selected' : '' }}>
+                                                                    <select name="nature_of_organization[]"
+                                                                        class="form-select selectized" required>
+                                                                        <option value=""
+                                                                            {{ !$experience->organization_nature_id ? 'selected' : '' }}>
                                                                             Select nature of organization</option>
                                                                         @foreach ($organization_natures as $organization_nature)
                                                                             <option value="{{ $organization_nature->id }}"
@@ -1254,9 +1251,10 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <!-- Other fields with pre-filled values -->
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-job_location">
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-job_location">
                                                                 <label for="job_location_{{ $index }}"
                                                                     class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job location<span class="text-danger">*</span>
@@ -1268,8 +1266,9 @@
                                                                         value="{{ $experience->job_location }}">
                                                                 </div>
                                                             </div>
-                            
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-designation">
+
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-designation">
                                                                 <label for="job_title_{{ $index }}"
                                                                     class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job Title<span class="text-danger">*</span>
@@ -1281,15 +1280,18 @@
                                                                         value="{{ $experience->job_title }}">
                                                                 </div>
                                                             </div>
-                            
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-job_category">
+
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-job_category">
                                                                 <label for="job_category_{{ $index }}"
                                                                     class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job category<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
-                                                                    <select name="job_category[]" class="form-select selectized" required>
-                                                                        <option value="" {{ !$experience->job_category_id ? 'selected' : '' }}>
+                                                                    <select name="job_category[]"
+                                                                        class="form-select selectized" required>
+                                                                        <option value=""
+                                                                            {{ !$experience->job_category_id ? 'selected' : '' }}>
                                                                             Select job category</option>
                                                                         @foreach ($job_categories as $job_category)
                                                                             <option value="{{ $job_category->id }}"
@@ -1300,17 +1302,20 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                            
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-job_level">
+
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-job_level">
                                                                 <label for="job_level_{{ $index }}"
                                                                     class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job level<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
-                                                                    <select name="job_level[]" class="form-select" required>
-                                                                        <option value="" {{ !$experience->job_level ? 'selected' : '' }}>
+                                                                    <select name="job_level[]" class="form-select"
+                                                                        required>
+                                                                        <option value=""
+                                                                            {{ !$experience->job_level ? 'selected' : '' }}>
                                                                             Select job level</option>
-                                                                        @foreach (['top_level' => 'Top Level', 'senior_level' => 'Senior Level', 'mid_level' => 'Mid Level', 'entry_level' => 'Entry Level'] as $value => $label)
+                                                                        @foreach (['Top Level' => 'Top Level', 'Senior Level' => 'Senior Level', 'Mid Level' => 'Mid Level', 'Entry Level' => 'Entry Level'] as $value => $label)
                                                                             <option value="{{ $value }}"
                                                                                 {{ $experience->job_level == $value ? 'selected' : '' }}>
                                                                                 {{ $label }}
@@ -1319,11 +1324,12 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3">
                                                                 <div class="offset-sm-3 col-sm-8">
                                                                     <div class="form-check">
-                                                                        <input type="checkbox" name="is_currently_working[]"
+                                                                        <input type="checkbox"
+                                                                            name="is_currently_working[]"
                                                                             class="form-check-input is-current"
                                                                             id="is_currently_working_form-{{ $index }}"
                                                                             {{ $experience->is_currently_working ? 'checked' : '' }}>
@@ -1334,9 +1340,10 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3 exp-start-date">
-                                                                <label class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Start Date<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1345,9 +1352,11 @@
                                                                         value="{{ $experience->started_date->format('Y-m-d') }}">
                                                                 </div>
                                                             </div>
-                            
-                                                            <div class="row mb-3 exp-end-date {{ $experience->is_currently_working ? 'hidden' : '' }}">
-                                                                <label class="col-form-label col-sm-3 text-sm-end requiredField">
+
+                                                            <div
+                                                                class="row mb-3 exp-end-date {{ $experience->is_currently_working ? 'hidden' : '' }}">
+                                                                <label
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     End Date<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1357,58 +1366,71 @@
                                                                         value="{{ optional($experience->end_date)->format('Y-m-d') }}">
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3">
-                                                                <label for="duties_and_responsibilities_{{ $index }}"
+                                                                <label
+                                                                    for="duties_and_responsibilities_{{ $index }}"
                                                                     class="col-form-label col-sm-3 text-sm-end requiredField">
-                                                                    Duties & Responsibilities<span class="text-danger">*</span>
+                                                                    Duties & Responsibilities<span
+                                                                        class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
                                                                     <textarea name="duties_and_responsibilities[]" cols="40" rows="10" class="form-control" required
                                                                         placeholder="Enter your duties and responsibilities">{{ $experience->duties_and_responsibilities }}</textarea>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="ms-3 mb-3">
                                                                 <a class="formset-delete btn btn-link text-danger {{ $index == 0 ? 'd-none' : '' }}"
-                                                                    role="button" title="Delete?" onclick="deleteFormset(this)">
+                                                                    role="button" title="Delete?"
+                                                                    onclick="deleteFormset(this)">
                                                                     <i class="fas fa-times-circle me-1"></i>Clear
                                                                 </a>
                                                             </div>
-                                                            <input type="checkbox" name="form-{{ $index }}-DELETE"
-                                                                class="d-none formset-delete" id="id_form-{{ $index }}-DELETE">
+                                                            <input type="checkbox"
+                                                                name="form-{{ $index }}-DELETE"
+                                                                class="d-none formset-delete"
+                                                                id="id_form-{{ $index }}-DELETE">
                                                             <hr>
                                                         </div>
                                                     @empty
                                                         <!-- Default empty formset when no experiences exist -->
                                                         <div class="formset-form location-form" data-cnt="form-0">
                                                             <div class="row mb-3" id="div_id_form-0-org_name">
-                                                                <label for="organization_name_0" class="col-form-label col-sm-3 text-sm-end requiredField">
-                                                                    Organization name<span class="text-danger">*</span>
+                                                                <label for="organization_name_0"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                    Company name<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
                                                                     <input type="text" name="organization_name[]"
                                                                         maxlength="255" class="form-control" required
-                                                                        placeholder="Enter your organization name">
+                                                                        placeholder="Enter your company name">
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3" id="div_id_form-0-industry">
-                                                                <label for="nature_of_organization_0" class="col-form-label col-sm-3 text-sm-end requiredField">
-                                                                    Nature of Organization<span class="text-danger">*</span>
+                                                                <label for="nature_of_organization_0"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                    Nature of Organization<span
+                                                                        class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
-                                                                    <select name="nature_of_organization[]" class="form-select selectized" required>
-                                                                        <option value="" selected>Select nature of organization</option>
+                                                                    <select name="nature_of_organization[]"
+                                                                        class="form-select selectized" required>
+                                                                        <option value="" selected>Select nature of
+                                                                            organization</option>
                                                                         @foreach ($organization_natures as $organization_nature)
-                                                                            <option value="{{ $organization_nature->id }}">{{ $organization_nature->name }}</option>
+                                                                            <option
+                                                                                value="{{ $organization_nature->id }}">
+                                                                                {{ $organization_nature->name }}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3" id="div_id_form-0-job_location">
-                                                                <label for="job_location_0" class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label for="job_location_0"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job location<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1417,9 +1439,10 @@
                                                                         placeholder="Enter your job location">
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3" id="div_id_form-0-designation">
-                                                                <label for="job_title_0" class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label for="job_title_0"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job Title<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1428,50 +1451,61 @@
                                                                         placeholder="Enter your job title">
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3" id="div_id_form-0-job_category">
-                                                                <label for="job_category_0" class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label for="job_category_0"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job category<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
-                                                                    <select name="job_category[]" class="form-select selectized" required>
-                                                                        <option value="" selected>Select job category</option>
+                                                                    <select name="job_category[]"
+                                                                        class="form-select selectized" required>
+                                                                        <option value="" selected>Select job category
+                                                                        </option>
                                                                         @foreach ($job_categories as $job_category)
-                                                                            <option value="{{ $job_category->id }}">{{ $job_category->category }}</option>
+                                                                            <option value="{{ $job_category->id }}">
+                                                                                {{ $job_category->category }}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3" id="div_id_form-0-job_level">
-                                                                <label for="job_level_0" class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label for="job_level_0"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Job level<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
-                                                                    <select name="job_level[]" class="form-select" required>
-                                                                        <option value="" selected>Select job level</option>
-                                                                        <option value="top_level">Top Level</option>
-                                                                        <option value="senior_level">Senior Level</option>
-                                                                        <option value="mid_level">Mid Level</option>
-                                                                        <option value="entry_level">Entry Level</option>
+                                                                    <select name="job_level[]" class="form-select"
+                                                                        required>
+                                                                        <option value="" selected>Select job level
+                                                                        </option>
+                                                                        <option value="Top Level">Top Level</option>
+                                                                        <option value="Senior Level">Senior Level</option>
+                                                                        <option value="Mid Level">Mid Level</option>
+                                                                        <option value="Entry Level">Entry Level</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3">
                                                                 <div class="offset-sm-3 col-sm-8">
                                                                     <div class="form-check">
-                                                                        <input type="checkbox" name="is_currently_working[]"
-                                                                            class="form-check-input is-current" id="is_currently_working_form-0">
-                                                                        <label class="form-check-label" for="is_currently_working_form-0">
+                                                                        <input type="checkbox"
+                                                                            name="is_currently_working[]"
+                                                                            class="form-check-input is-current"
+                                                                            id="is_currently_working_form-0">
+                                                                        <label class="form-check-label"
+                                                                            for="is_currently_working_form-0">
                                                                             Is currently working here?
                                                                         </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3 exp-start-date">
-                                                                <label class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Start Date<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1479,9 +1513,10 @@
                                                                         class="form-control" required>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3 exp-end-date">
-                                                                <label class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     End Date<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1489,20 +1524,23 @@
                                                                         class="form-control end-date-input" required>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3">
-                                                                <label for="duties_and_responsibilities_0" class="col-form-label col-sm-3 text-sm-end requiredField">
-                                                                    Duties & Responsibilities<span class="text-danger">*</span>
+                                                                <label for="duties_and_responsibilities_0"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                    Duties & Responsibilities<span
+                                                                        class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
                                                                     <textarea name="duties_and_responsibilities[]" cols="40" rows="10" class="form-control" required
                                                                         placeholder="Enter your duties and responsibilities"></textarea>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="ms-3 mb-3">
                                                                 <a class="formset-delete btn btn-link text-danger d-none"
-                                                                    role="button" title="Delete?" onclick="deleteFormset(this)">
+                                                                    role="button" title="Delete?"
+                                                                    onclick="deleteFormset(this)">
                                                                     <i class="fas fa-times-circle me-1"></i>Clear
                                                                 </a>
                                                             </div>
@@ -1512,9 +1550,10 @@
                                                         </div>
                                                     @endforelse
                                                 </div>
-                            
+
                                                 <div class="text-center mb-3">
-                                                    <a href="#" onclick="addAnotherExperience(); return false;" id="add-more" class="btn btn-link">
+                                                    <a href="#" onclick="addAnotherExperience(); return false;"
+                                                        id="add-more" class="btn btn-link">
                                                         <i class="fas fa-plus-circle me-2"></i>Add Another Experience
                                                     </a>
                                                 </div>
@@ -1522,13 +1561,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            
+
                                 <div class="card-footer text-center">
                                     <button type="submit" class="btn btn-info" id="submit">Save</button>
                                 </div>
-                            
+
                                 <!-- Hidden input for total forms count -->
-                                <input type="hidden" name="form-TOTAL_FORMS" value="{{ count($employee_experiences) ?: 1 }}" id="id_form-TOTAL_FORMS">
+                                <input type="hidden" name="form-TOTAL_FORMS"
+                                    value="{{ count($employee_experiences) ?: 1 }}" id="id_form-TOTAL_FORMS">
                             </form>
                         </div>
                     </div>
@@ -1560,13 +1600,14 @@
                                                                 <div class="col-md-3 mb-3 ms-md-5">
                                                                     <div id="div_id_form-{{ $index }}-language"
                                                                         class="form-group">
-                                                                        <label for="id_form-{{ $index }}-language"
+                                                                        <label
+                                                                            for="id_form-{{ $index }}-language"
                                                                             class="col-form-label requiredField">
                                                                             Language<span class="text-danger">*</span>
                                                                         </label>
                                                                         <input type="text" name="language[]"
-                                                                            maxlength="255" class="form-control" required
-                                                                            placeholder="Enter Language"
+                                                                            maxlength="255" class="form-control"
+                                                                            required placeholder="Enter Language"
                                                                             value="{{ $language->language }}">
                                                                     </div>
                                                                 </div>
@@ -1632,7 +1673,8 @@
                                                                 <div class="col-md-2 mb-3">
                                                                     <div id="div_id_form-{{ $index }}-speaking"
                                                                         class="form-group">
-                                                                        <label for="id_form-{{ $index }}-speaking"
+                                                                        <label
+                                                                            for="id_form-{{ $index }}-speaking"
                                                                             class="col-form-label requiredField">
                                                                             Speaking<span class="text-danger">*</span>
                                                                         </label>
@@ -1713,8 +1755,8 @@
                                                                             Language<span class="text-danger">*</span>
                                                                         </label>
                                                                         <input type="text" name="language[]"
-                                                                            maxlength="255" class="form-control" required
-                                                                            placeholder="Enter Language">
+                                                                            maxlength="255" class="form-control"
+                                                                            required placeholder="Enter Language">
                                                                     </div>
                                                                 </div>
 
@@ -1837,10 +1879,11 @@
                                 Social Account > <strong class="ms-1">Add Social Account</strong>
                             </div>
 
-                            <form id="socialAccountForm" method="POST" action="{{ route('update.employee.account') }}" class="mt-3">
+                            <form id="socialAccountForm" method="POST"
+                                action="{{ route('update.employee.account') }}" class="mt-3">
                                 @csrf
                                 @method('PUT')
-                            
+
                                 <div class="card-body">
                                     <div class="">
                                         <div class="row mt-3">
@@ -1849,10 +1892,13 @@
                                                     @forelse($employee_social_accounts as $index => $socialAccount)
                                                         <div class="formset-form" data-cnt="form-{{ $index }}">
                                                             <!-- Hidden ID field for existing records -->
-                                                            <input type="hidden" name="social_account_id[]" value="{{ $socialAccount->id }}">
-                            
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-account_name">
-                                                                <label for="id_form-{{ $index }}-account_name" class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                            <input type="hidden" name="social_account_id[]"
+                                                                value="{{ $socialAccount->id }}">
+
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-account_name">
+                                                                <label for="id_form-{{ $index }}-account_name"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Account name<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1862,34 +1908,41 @@
                                                                         value="{{ $socialAccount->account_name }}">
                                                                 </div>
                                                             </div>
-                            
-                                                            <div class="row mb-3" id="div_id_form-{{ $index }}-url">
-                                                                <label for="id_form-{{ $index }}-url" class="col-form-label col-sm-3 text-sm-end requiredField">
+
+                                                            <div class="row mb-3"
+                                                                id="div_id_form-{{ $index }}-url">
+                                                                <label for="id_form-{{ $index }}-url"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Url<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
                                                                     <input type="url" name="account_url[]"
-                                                                        maxlength="255" placeholder="eg.: https://facebook.com/user"
+                                                                        maxlength="255"
+                                                                        placeholder="eg.: https://facebook.com/user"
                                                                         class="form-control" required
                                                                         value="{{ $socialAccount->account_url }}">
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="ms-3 mb-3">
                                                                 <a class="formset-delete btn btn-link text-danger {{ $index == 0 ? 'd-none' : '' }}"
-                                                                    role="button" title="Delete?" onclick="deleteFormset(this)">
+                                                                    role="button" title="Delete?"
+                                                                    onclick="deleteFormset(this)">
                                                                     <i class="fas fa-times-circle me-1"></i>Clear
                                                                 </a>
                                                             </div>
-                                                            <input type="checkbox" name="form-{{ $index }}-DELETE"
-                                                                class="d-none formset-delete" id="id_form-{{ $index }}-DELETE">
+                                                            <input type="checkbox"
+                                                                name="form-{{ $index }}-DELETE"
+                                                                class="d-none formset-delete"
+                                                                id="id_form-{{ $index }}-DELETE">
                                                             <hr>
                                                         </div>
                                                     @empty
                                                         <!-- Default empty formset -->
                                                         <div class="formset-form" data-cnt="form-0">
                                                             <div class="row mb-3" id="div_id_form-0-account_name">
-                                                                <label for="id_form-0-account_name" class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label for="id_form-0-account_name"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Account name<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
@@ -1898,21 +1951,24 @@
                                                                         class="form-control" required>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="row mb-3" id="div_id_form-0-url">
-                                                                <label for="id_form-0-url" class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                                <label for="id_form-0-url"
+                                                                    class="col-form-label col-sm-3 text-sm-end requiredField">
                                                                     Url<span class="text-danger">*</span>
                                                                 </label>
                                                                 <div class="col-sm-8">
                                                                     <input type="url" name="account_url[]"
-                                                                        maxlength="255" placeholder="eg.: https://facebook.com/user"
+                                                                        maxlength="255"
+                                                                        placeholder="eg.: https://facebook.com/user"
                                                                         class="form-control" required>
                                                                 </div>
                                                             </div>
-                            
+
                                                             <div class="ms-3 mb-3">
                                                                 <a class="formset-delete btn btn-link text-danger d-none"
-                                                                    role="button" title="Delete?" onclick="deleteFormset(this)">
+                                                                    role="button" title="Delete?"
+                                                                    onclick="deleteFormset(this)">
                                                                     <i class="fas fa-times-circle me-1"></i>Clear
                                                                 </a>
                                                             </div>
@@ -1922,9 +1978,10 @@
                                                         </div>
                                                     @endforelse
                                                 </div>
-                            
+
                                                 <div class="text-center mb-3">
-                                                    <a href="#" onclick="addAnotherSocialAccount(); return false;" id="add-more" class="btn btn-link">
+                                                    <a href="#" onclick="addAnotherSocialAccount(); return false;"
+                                                        id="add-more" class="btn btn-link">
                                                         <i class="fas fa-plus-circle me-2"></i>Add Another Social Account
                                                     </a>
                                                 </div>
@@ -1932,13 +1989,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            
+
                                 <div class="card-footer text-center">
                                     <button type="submit" class="btn btn-info" id="save-button">Save</button>
                                 </div>
-                            
+
                                 <!-- Hidden input for total forms count -->
-                                <input type="hidden" name="form-TOTAL_FORMS" value="{{ count($employee_social_accounts) }}" id="id_form-TOTAL_FORMS">
+                                <input type="hidden" name="form-TOTAL_FORMS"
+                                    value="{{ count($employee_social_accounts) }}" id="id_form-TOTAL_FORMS">
                             </form>
                         </div>
                     </div>
@@ -1952,10 +2010,11 @@
                                 <strong>Other Information</strong>
                             </div>
 
-                            <form id="otherInfoForm" method="POST" action="{{ route('update.employee.other.information') }}" class="mt-3">
+                            <form id="otherInfoForm" method="POST"
+                                action="{{ route('update.employee.other.information') }}" class="mt-3">
                                 @csrf
                                 @method('PUT')
-                            
+
                                 <div class="card-body">
                                     <div>
                                         <!-- Willing to Travel -->
@@ -1965,29 +2024,30 @@
                                             </div>
                                             <div class="col-3">
                                                 <div class="form-check form-switch">
-                                                    <input type="checkbox" name="willing_to_travel" class="form-check-input"
-                                                           id="id_travel" role="switch"
-                                                           {{ isset($employee) && $employee->willing_to_travel ? 'checked' : '' }}>
+                                                    <input type="checkbox" name="willing_to_travel"
+                                                        class="form-check-input" id="id_travel" role="switch"
+                                                        {{ isset($employee) && $employee->willing_to_travel ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="id_travel">Yes</label>
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                         <!-- Willing to Relocate -->
                                         <div class="row mb-3">
                                             <div class="col-9">
-                                                Are you willing to temporarily relocate outside of your residing location during the job period?
+                                                Are you willing to temporarily relocate outside of your residing location
+                                                during the job period?
                                             </div>
                                             <div class="col-3">
                                                 <div class="form-check form-switch">
-                                                    <input type="checkbox" name="willing_to_relocate" class="form-check-input"
-                                                           id="id_relocate" role="switch"
-                                                           {{ isset($employee) && $employee->willing_to_relocate ? 'checked' : '' }}>
+                                                    <input type="checkbox" name="willing_to_relocate"
+                                                        class="form-check-input" id="id_relocate" role="switch"
+                                                        {{ isset($employee) && $employee->willing_to_relocate ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="id_relocate">Yes</label>
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                         <!-- Two-Wheeler License -->
                                         <div class="row mb-3">
                                             <div class="col-9">
@@ -1995,14 +2055,16 @@
                                             </div>
                                             <div class="col-3">
                                                 <div class="form-check form-switch">
-                                                    <input type="checkbox" name="two_wheeler_license" class="form-check-input"
-                                                           id="id_two_wheeler_license" role="switch"
-                                                           {{ isset($employee) && $employee->two_wheeler_license ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="id_two_wheeler_license">Yes</label>
+                                                    <input type="checkbox" name="two_wheeler_license"
+                                                        class="form-check-input" id="id_two_wheeler_license"
+                                                        role="switch"
+                                                        {{ isset($employee) && $employee->two_wheeler_license ? 'checked' : '' }}>
+                                                    <label class="form-check-label"
+                                                        for="id_two_wheeler_license">Yes</label>
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                         <!-- Four-Wheeler License -->
                                         <div class="row mb-3">
                                             <div class="col-9">
@@ -2010,14 +2072,16 @@
                                             </div>
                                             <div class="col-3">
                                                 <div class="form-check form-switch">
-                                                    <input type="checkbox" name="four_wheeler_license" class="form-check-input"
-                                                           id="id_four_wheeler_license" role="switch"
-                                                           {{ isset($employee) && $employee->four_wheeler_license ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="id_four_wheeler_license">Yes</label>
+                                                    <input type="checkbox" name="four_wheeler_license"
+                                                        class="form-check-input" id="id_four_wheeler_license"
+                                                        role="switch"
+                                                        {{ isset($employee) && $employee->four_wheeler_license ? 'checked' : '' }}>
+                                                    <label class="form-check-label"
+                                                        for="id_four_wheeler_license">Yes</label>
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                         <!-- Own Two-Wheeler -->
                                         <div class="row mb-3">
                                             <div class="col-9">
@@ -2025,14 +2089,15 @@
                                             </div>
                                             <div class="col-3">
                                                 <div class="form-check form-switch">
-                                                    <input type="checkbox" name="own_two_wheeler" class="form-check-input"
-                                                           id="id_own_two_wheeler" role="switch"
-                                                           {{ isset($employee) && $employee->own_two_wheeler ? 'checked' : '' }}>
+                                                    <input type="checkbox" name="own_two_wheeler"
+                                                        class="form-check-input" id="id_own_two_wheeler"
+                                                        role="switch"
+                                                        {{ isset($employee) && $employee->own_two_wheeler ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="id_own_two_wheeler">Yes</label>
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                         <!-- Own Four-Wheeler -->
                                         <div class="row mb-3">
                                             <div class="col-9">
@@ -2040,22 +2105,24 @@
                                             </div>
                                             <div class="col-3">
                                                 <div class="form-check form-switch">
-                                                    <input type="checkbox" name="own_four_wheeler" class="form-check-input"
-                                                           id="id_own_four_wheeler" role="switch"
-                                                           {{ isset($employee) && $employee->own_four_wheeler ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="id_own_four_wheeler">Yes</label>
+                                                    <input type="checkbox" name="own_four_wheeler"
+                                                        class="form-check-input" id="id_own_four_wheeler"
+                                                        role="switch"
+                                                        {{ isset($employee) && $employee->own_four_wheeler ? 'checked' : '' }}>
+                                                    <label class="form-check-label"
+                                                        for="id_own_four_wheeler">Yes</label>
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                     </div>
                                 </div>
-                            
+
                                 <div class="card-footer text-center">
                                     <button type="submit" class="btn btn-info" id="submit">Save</button>
                                 </div>
                             </form>
-                            
+
                         </div>
                     </div>
                     {{-- end of tab 8 --}}
@@ -2121,34 +2188,34 @@
 
         // Generic function to delete a formset
         function deleteFormset(button) {
-    const formset = button.closest('.formset-form');
-    if (!formset) {
-        console.error('Formset not found for deletion');
-        return;
-    }
+            const formset = button.closest('.formset-form');
+            if (!formset) {
+                console.error('Formset not found for deletion');
+                return;
+            }
 
-    const deleteCheckbox = formset.querySelector('.formset-delete[type="checkbox"]');
-    if (deleteCheckbox) {
-        deleteCheckbox.checked = true; // Mark for deletion
+            const deleteCheckbox = formset.querySelector('.formset-delete[type="checkbox"]');
+            if (deleteCheckbox) {
+                deleteCheckbox.checked = true; // Mark for deletion
 
-        // Remove the formset from the DOM entirely
-        formset.parentNode.removeChild(formset);
+                // Remove the formset from the DOM entirely
+                formset.parentNode.removeChild(formset);
 
-        // Update the total forms count
-        const totalFormsInput = document.getElementById('id_form-TOTAL_FORMS');
-        if (totalFormsInput) {
-            let formCount = parseInt(totalFormsInput.value) || 0;
-            if (formCount > 0) {
-                formCount--;
-                totalFormsInput.value = formCount;
+                // Update the total forms count
+                const totalFormsInput = document.getElementById('id_form-TOTAL_FORMS');
+                if (totalFormsInput) {
+                    let formCount = parseInt(totalFormsInput.value) || 0;
+                    if (formCount > 0) {
+                        formCount--;
+                        totalFormsInput.value = formCount;
+                    }
+                }
+
+                console.log(`Formset ${formset.dataset.cnt} removed from DOM`);
+            } else {
+                console.error('Delete checkbox not found in formset');
             }
         }
-
-        console.log(`Formset ${formset.dataset.cnt} removed from DOM`);
-    } else {
-        console.error('Delete checkbox not found in formset');
-    }
-}
 
         // Function to toggle end date visibility
         function toggleEndDate(checkbox, formContainer) {

@@ -22,7 +22,7 @@ class UpdateEmployeeJobPreferences extends FormRequest
     public function rules(): array
     {
         return [
-            'job_level' => 'nullable|string|in:top_level,senior_level,mid_level,entry_level',
+            'job_level' => 'nullable|string',
             'expected_salary_currency' => 'nullable|string|in:NRs,$,Irs',
             'expected_salary_operator' => 'nullable|string|in:Above,Below,Equals',
             'expected_salary' => 'nullable|numeric|min:0',

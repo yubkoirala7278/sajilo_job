@@ -28,8 +28,9 @@
                             <span id="name-error" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="mobile_no" placeholder="Mobile Number"
-                                id="mobile_no">
+                            <input type="tel" class="form-control" name="mobile_no" id="mobile_no"
+                                placeholder="Mobile Number" required>
+
                             <span id="mobile_no-error" class="text-danger"></span>
                         </div>
                         <div class="mb-3">

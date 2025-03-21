@@ -34,11 +34,11 @@
     {{-- jquery --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-     {{-- sweet alert 2 --}}
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- sweet alert 2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-     {{-- data table css link --}}
-     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    {{-- data table css link --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     {{-- toastify css --}}
     @toastifyCss
 
@@ -153,99 +153,112 @@
                 </a>
             </li><!-- End Dashboard Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('admin.employee.profile') }}">
-                    <i class="fas fa-address-card"></i>
-                    <span>Employee Profile</span>
-                </a>
-            </li>
+            @if (auth()->user() && auth()->user()->hasRole('employee'))
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ route('admin.employee.profile') }}">
+                        <i class="fas fa-address-card"></i>
+                        <span>Employee Profile</span>
+                    </a>
+                </li>
+            @endif
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('job_category.index') }}">
-                    <i class="fa-solid fa-layer-group"></i>
-                    <span>Job Category</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('technical_skill.index') }}">
-                    <i class="fas fa-laptop-code"></i>
-                    <span>Technical Skill</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('job_title.index') }}">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Job Title</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('preferred_industry.index') }}">
-                    <i class="fas fa-university"></i>
-                    <span>Job Preferred Industry</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('employee_availability.index') }}">
-                    <i class="fas fa-business-time"></i>
-                    <span>Employee Availability</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('employee_specialization.index') }}">
-                    <i class="fas fa-balance-scale"></i>
-                    <span>Employee Specialization</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('employee_skill.index') }}">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Employee Skill</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('job_preference_location.index') }}">
-                    <i class="fas fa-globe"></i>
-                    <span>Job Preference Location</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('religion.index') }}">
-                    <i class="fas fa-om"></i>
-                    <span>Religion</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('employee_degree.index') }}">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Employee Degree</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('employee_course.index') }}">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Employee Course</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('organization_nature.index') }}">
-                    <i class="fas fa-building"></i>
-                    <span>Organization Nature</span>
-                </a>
-            </li>
-
-
-
+            @if (auth()->user() && auth()->user()->hasRole('admin'))
+                {{-- ========Job Seeker Management========== --}}
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#job-seeker-management" data-bs-toggle="collapse"
+                        href="#">
+                        <i class="fas fa-user-tie"></i><span>JobSeeker Management</span><i
+                            class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="job-seeker-management" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="{{route('job.seeker.management')}}">
+                                <i class="bi bi-circle"></i><span>New Jobseeker Registration</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>Approved Jobseeker</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>Rejected Jobseeker</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {{-- ========General Settings========== --}}
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#setting" data-bs-toggle="collapse"
+                        href="#">
+                        <i class="fa-solid fa-wrench"></i><span>General Settings</span><i
+                            class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="setting" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="{{ route('job_category.index') }}">
+                                <i class="bi bi-circle"></i><span>Job Category</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('technical_skill.index') }}">
+                                <i class="bi bi-circle"></i><span>Technical Skill</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('job_title.index') }}">
+                                <i class="bi bi-circle"></i><span>Job Title</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('preferred_industry.index') }}">
+                                <i class="bi bi-circle"></i><span>Job Preferred Industry</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('employee_availability.index') }}">
+                                <i class="bi bi-circle"></i><span>Employee Availability</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('employee_specialization.index') }}">
+                                <i class="bi bi-circle"></i><span>Employee Specialization</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('employee_skill.index') }}">
+                                <i class="bi bi-circle"></i><span>Employee Skill</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('job_preference_location.index') }}">
+                                <i class="bi bi-circle"></i><span>Job Preference Location</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('religion.index') }}">
+                                <i class="bi bi-circle"></i><span>Religion</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('employee_degree.index') }}">
+                                <i class="bi bi-circle"></i><span>Employee Degree</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('employee_course.index') }}">
+                                <i class="bi bi-circle"></i><span>Employee Course</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('organization_nature.index') }}">
+                                <i class="bi bi-circle"></i><span>Organization Nature</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
         </ul>
 
     </aside><!-- End Sidebar-->

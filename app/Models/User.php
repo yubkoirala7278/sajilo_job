@@ -43,6 +43,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'status',
         'slug'
     ];
 
@@ -83,4 +84,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Relationship with Employee
+    public function employee(){
+        return $this->hasOne(Employee::class);
+    }
 }

@@ -60,7 +60,7 @@ class RegisterController extends Controller
         ];
 
         if ($data['role'] === 'employee') {
-            $rules['mobile_no'] = ['required', 'string', 'max:15'];
+            $rules['mobile_no'] = ['required', 'string'];
         } elseif ($data['role'] === 'employer') {
             $rules['industry'] = ['nullable', 'string', 'max:255'];
         }
@@ -80,6 +80,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'email_verified_at'=>now()
         ]);
 
         if ($data['role'] === 'employee') {

@@ -10,6 +10,7 @@ class Employee extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'profile',
         'job_level',
         'expected_salary_currency',
         'expected_salary_operator',
@@ -94,5 +95,25 @@ class Employee extends Model
     public function jobPreferenceLocations()
     {
         return $this->belongsToMany(JobPreferenceLocation::class, 'employee_job_preference_location', 'employee_id', 'job_preference_location_id');
+    }
+
+    // Relationship with religion
+    public function religion(){
+        return $this->belongsTo(Religion::class);
+    }
+
+    // Relationship with degree
+    public function degree(){
+        return $this->belongsTo(Degree::class);
+    }
+
+    // Relationship with course
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
+
+    // Relationship with language
+    public function language(){
+        return $this->hasMany(EmployeeLanguage::class);
     }
 }
