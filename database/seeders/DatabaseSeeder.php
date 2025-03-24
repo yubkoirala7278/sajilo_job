@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
             ReligionSeeder::class,
             DegreeCourseSeeder::class,
             OrganizationNatureSeeder::class,
+
+            // fake
+            UserSeeder::class
         ]);
     }
 }

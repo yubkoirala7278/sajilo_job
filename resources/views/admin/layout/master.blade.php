@@ -163,6 +163,31 @@
             @endif
 
             @if (auth()->user() && auth()->user()->hasRole('admin'))
+                {{-- =======employeer management --}}
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#employeer-management" data-bs-toggle="collapse"
+                        href="#">
+                        <i class="fas fa-building"></i><span>Employer Management</span><i
+                            class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="employeer-management" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>New Employer/Registrations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>Suspended Employers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>Blacklisted Employers</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 {{-- ========Job Seeker Management========== --}}
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#job-seeker-management" data-bs-toggle="collapse"
@@ -172,17 +197,17 @@
                     </a>
                     <ul id="job-seeker-management" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="{{route('job.seeker.management')}}">
+                            <a href="{{ route('job.seeker.management') }}">
                                 <i class="bi bi-circle"></i><span>New Jobseeker Registration</span>
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="{{route('approved.job.seeker')}}">
                                 <i class="bi bi-circle"></i><span>Approved Jobseeker</span>
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="{{route('rejected.job.seeker')}}">
                                 <i class="bi bi-circle"></i><span>Rejected Jobseeker</span>
                             </a>
                         </li>
@@ -259,6 +284,14 @@
                     </ul>
                 </li>
             @endif
+
+            {{-- messenger --}}
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ route('messenger') }}">
+                    <i class="fa-solid fa-headset"></i>
+                    <span>Chat</span>
+                </a>
+            </li>
         </ul>
 
     </aside><!-- End Sidebar-->

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
 // ====Auth===============
 Auth::routes(['verify' => true]);
 
@@ -24,3 +25,6 @@ Route::group(['middleware' => ['auth.admin', 'verified']], function () {
 // =====handle wrong url======
 Route::redirect('/{any}', '/', 301);
 //=======end of handling wrong url===
+
+
+

@@ -15,6 +15,7 @@ use App\Http\Controllers\admin\OrganizationNatureController;
 use App\Http\Controllers\admin\PreferredIndustryController;
 use App\Http\Controllers\admin\ReligionController;
 use App\Http\Controllers\admin\TechnicalSkillController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('admin.home');
@@ -40,6 +41,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // job seekers
     Route::group(['prefix' => 'job-seeker'], function () {
         Route::get('/management', [JobSeekerManagementController::class, 'index'])->name('job.seeker.management');
+        Route::get('/approved_job_seeker', [JobSeekerManagementController::class, 'approvedJobSeeker'])->name('approved.job.seeker');
+        Route::get('/rejected_job_seeker', [JobSeekerManagementController::class, 'rejectedJobSeeker'])->name('rejected.job.seeker');
         Route::get('/management/data', [JobSeekerManagementController::class, 'getData'])->name('job.seeker.data');
         Route::delete('/management/delete/{id}', [JobSeekerManagementController::class, 'destroy'])->name('job.seeker.delete');
         Route::put('/management/status/{id}', [JobSeekerManagementController::class, 'changeStatus'])->name('job.seeker.status');
@@ -73,3 +76,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/employee_course/toggle-status/{slug}', [EmployeeCourseController::class, 'toggleStatus'])->name('employee_course.toggle-status');
     Route::patch('/organization_nature/toggle-status/{slug}', [OrganizationNatureController::class, 'toggleStatus'])->name('organization_nature.toggle-status');
 });
+
+
+
+Route::get('/chat/{id}', [ChatController::class, 'chat'])->name('chat');
+Route::post('/send-message', [ChatController::class, 'store'])->name('chat.send');
+Route::get('/messenger', [ChatController::class, 'messenger'])->name('messenger');
+Route::get('/fetch-latest-notification', [ChatController::class, 'fetchLatestNotification']);
