@@ -6,6 +6,8 @@ use App\Http\Controllers\admin\EmployeeController;
 use App\Http\Controllers\admin\EmployeeCourseController;
 use App\Http\Controllers\admin\EmployeeSkillController;
 use App\Http\Controllers\admin\EmployeeSpecializationController;
+use App\Http\Controllers\admin\EmployerController;
+use App\Http\Controllers\admin\EmployerManagementController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\JobCategoryController;
 use App\Http\Controllers\admin\JobPreferenceLocationController;
@@ -49,6 +51,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/management/view/{id}', [JobSeekerManagementController::class, 'view'])->name('job.seeker.view');
         Route::get('/management/cv/{id}', [JobSeekerManagementController::class, 'viewCV'])->name('job.seeker.cv');
     });
+
+    // employer management
+    Route::get('/employer_management', [EmployerManagementController::class, 'index'])->name('admin.employer.management');
+    Route::get('/approved_employer_management', [EmployerManagementController::class, 'approved'])->name('admin.approved.employer.management');
+    Route::get('/rejected_employer_management', [EmployerManagementController::class, 'rejected'])->name('admin.rejected.employer.management');
+    Route::get('/employer_management/data', [EmployerManagementController::class, 'getData'])->name('admin.employer.data');
+    Route::post('/employer_management/delete', [EmployerManagementController::class, 'destroy'])->name('admin.employer.delete');
+    Route::post('/employer_management/toggle-status/{id}', [EmployerManagementController::class, 'toggleStatus'])->name('admin.employer.toggle');
+    Route::get('/employer_management/view/{slug}', [EmployerManagementController::class, 'view'])->name('admin.employer.view');
+
     Route::resources([
         'job_category' => JobCategoryController::class,
         'technical_skill' => TechnicalSkillController::class,
@@ -83,3 +95,10 @@ Route::get('/chat/{id}', [ChatController::class, 'chat'])->name('chat');
 Route::post('/send-message', [ChatController::class, 'store'])->name('chat.send');
 Route::get('/messenger', [ChatController::class, 'messenger'])->name('messenger');
 Route::get('/fetch-latest-notification', [ChatController::class, 'fetchLatestNotification']);
+
+
+// =======employer========
+Route::middleware(['auth', 'role:employer'])->group(function () {
+    Route::get('/employer_profile', [EmployerController::class, 'index'])->name('admin.employer.profile');
+    Route::put('/employer_profile', [EmployerController::class, 'update'])->name('admin.employer.profile.update');
+});

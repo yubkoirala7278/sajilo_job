@@ -67,6 +67,12 @@
                             <span id="company_name-error" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
+                            <input type="tel" class="form-control" name="mobile_no" id="mobile_no"
+                                placeholder="Mobile Number" required>
+
+                            <span id="mobile_no-error" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
                             <input type="email" class="form-control" name="email" placeholder="Company Email"
                                 id="company_email">
                             <span id="company_email-error" class="text-danger"></span>

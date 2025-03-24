@@ -170,35 +170,26 @@ class EmployeeController extends Controller
         try {
             // Get the authenticated user
             $user = Auth::user();
+            $employee = Employee::where('user_id', $user->id)->first();
 
             // Handle resume upload if provided
-            $pathName = null;
             if ($request->hasFile('resume')) {
-                // Find the employee record
-                $employee = Employee::where('user_id', $user->id)->first();
-
-                // Delete existing resume if it exists
                 if ($employee && $employee->resume) {
                     Storage::disk('public')->delete($employee->resume);
                 }
-
-                // Store the new resume in the 'resumes' folder inside 'storage/app/public'
-                $pathName = $request->file('resume')->store('resumes', 'public');
+                $resumePath = $request->file('resume')->store('resumes', 'public');
+            } else {
+                $resumePath = $employee->resume ?? null;
             }
 
-             // Handle profile upload if provided
-             $profilePath = null;
+            // Handle profile upload if provided
             if ($request->hasFile('profile')) {
-                // Find the employee record
-                $employee = Employee::where('user_id', $user->id)->first();
-
-                // Delete existing profile if it exists
                 if ($employee && $employee->profile) {
                     Storage::disk('public')->delete($employee->profile);
                 }
-
-                // Store the new profile in the 'profiles' folder inside 'storage/app/public'
                 $profilePath = $request->file('profile')->store('profiles', 'public');
+            } else {
+                $profilePath = $employee->profile ?? null;
             }
 
             // Update user name
@@ -208,17 +199,16 @@ class EmployeeController extends Controller
 
             // Update or create the Employee record
             Employee::updateOrCreate(
-                ['user_id' => $user->id], // Condition to check if the record exists
+                ['user_id' => $user->id],
                 [
-                    'user_id' => $user->id,
                     'gender' => $request->gender,
                     'date_of_birth' => $request->dob,
                     'marital_status' => $request->marital_status,
                     'religion_id' => $request->religion,
                     'is_disabled' => $request->has('is_disabled'),
                     'nationality' => $request->nationality,
-                    'resume' => $pathName,
-                    'profile'=>$profilePath,
+                    'resume' => $resumePath,
+                    'profile' => $profilePath,
                     'current_address' => $request->current_address,
                     'permanent_address' => $request->permanent_address,
                     'contact_number' => $request->contact_number,
@@ -230,6 +220,7 @@ class EmployeeController extends Controller
             return back()->with('error', $th->getMessage());
         }
     }
+
 
     // update employee education
     public function updateEducation(Request $request)
@@ -313,19 +304,21 @@ class EmployeeController extends Controller
                 ['user_id' => Auth::user()->id]
             );
             $employeeId = $employee->id;
-    
+
             // Step 1: Delete all existing experiences for this employee
             EmployeeExperience::where('employee_id', $employeeId)->delete();
-    
+
             // Step 2: Insert new experiences from the request
             foreach ($request->organization_name as $index => $organizationName) {
                 // Skip if required fields are empty
-                if (empty($organizationName) || 
-                    empty($request->job_location[$index]) || 
-                    empty($request->job_title[$index])) {
+                if (
+                    empty($organizationName) ||
+                    empty($request->job_location[$index]) ||
+                    empty($request->job_title[$index])
+                ) {
                     continue;
                 }
-    
+
                 $data = [
                     'employee_id' => $employeeId,
                     'organization_name' => $organizationName,
@@ -339,11 +332,11 @@ class EmployeeController extends Controller
                     'organization_nature_id' => (int) $request->nature_of_organization[$index],
                     'job_category_id' => (int) $request->job_category[$index],
                 ];
-    
+
                 // Create a new experience record
                 EmployeeExperience::create($data);
             }
-    
+
             return back()->with('success', 'Experience information updated successfully!');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());

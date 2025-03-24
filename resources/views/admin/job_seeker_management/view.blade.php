@@ -166,7 +166,7 @@
             <!-- Profile Container -->
             <div class="profile-container">
                 <div class="d-flex align-items-center flex-wrap mb-5">
-                    <img src="{{ $employee->employee->profile ? asset('storage/' . $employee->employee->profile) : asset('admin/assets/img/profile.png') }}"
+                    <img src="{{ optional($employee->employee)->profile ? asset('storage/' . $employee->employee->profile) : asset('admin/assets/img/profile.png') }}"
                         alt="Profile" class="profile-avatar">
                     <div>
                         <h2 class="fw-bold mb-2" style="color: #1e3a8a;">{{ $employee->name ?? 'N/A' }}</h2>
@@ -196,7 +196,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-birthday-cake me-2"></i> Date of Birth</td>
                         <td class="value-col">
-                            {{ $employee->employee->date_of_birth ? \Carbon\Carbon::parse($employee->employee->date_of_birth)->format('F d, Y') : 'N/A' }}
+                            {{ optional($employee->employee)->date_of_birth ? \Carbon\Carbon::parse($employee->employee->date_of_birth)->format('F d, Y') : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -210,8 +210,9 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-wheelchair me-2"></i> Disability</td>
                         <td class="value-col">
-                            {{ $employee->employee->is_disabled !== null ? ($employee->employee->is_disabled ? 'Yes' : 'No') : 'N/A' }}
+                            {{ optional($employee->employee)->is_disabled ? 'Yes' : 'No' }}
                         </td>
+
                     </tr>
                     <tr>
                         <td class="label-col"><i class="fas fa-flag me-2"></i> Nationality</td>
@@ -269,8 +270,8 @@
                 <!-- Language -->
                 <h3 class="section-header"><i class="fas fa-language me-2"></i> Language</h3>
                 <div class="row g-3 mb-5">
-                    @if (count($employee->employee->language) > 0)
-                        @foreach ($employee->employee->language as $language)
+                    @if (count(optional($employee->employee)->language ?? []) > 0)
+                        @foreach (optional($employee->employee)->language ?? [] as $language)
                             <div class="col-md-6 col-lg-3">
                                 <div class="card h-100 border-0 shadow-md" style="border-radius: 10px;">
                                     <div class="card-body p-3">
@@ -406,7 +407,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-user-graduate me-2"></i> Currently Studying</td>
                         <td class="value-col">
-                            {{ $employee->employee->is_currently_studying !== null ? ($employee->employee->is_currently_studying ? 'Yes' : 'No') : 'N/A' }}
+                            {{ optional($employee->employee)->is_currently_studying ? 'Yes' : 'No' }}
                         </td>
                     </tr>
                     <tr>
@@ -432,7 +433,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-folder-open me-2"></i> Job Categories</td>
                         <td class="value-col">
-                            @forelse($employee->employee->jobCategories as $category)
+                            @forelse(optional($employee->employee)->jobCategories ?? [] as $category)
                                 <span class="badge-professional">{{ $category->category }}</span>
                             @empty
                                 <span class="text-muted">Not specified</span>
@@ -442,7 +443,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-industry me-2"></i> Preferred Industries</td>
                         <td class="value-col">
-                            @forelse($employee->employee->preferredIndustries as $industry)
+                            @forelse(optional($employee->employee)->preferredIndustries ?? [] as $industry)
                                 <span class="badge-professional">{{ $industry->name }}</span>
                             @empty
                                 <span class="text-muted">Not specified</span>
@@ -452,7 +453,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-briefcase me-2"></i> Preferred Job Titles</td>
                         <td class="value-col">
-                            @forelse($employee->employee->preferredJobTitles as $title)
+                            @forelse(optional($employee->employee)->preferredJobTitles ?? [] as $title)
                                 <span class="badge-professional">{{ $title->name }}</span>
                             @empty
                                 <span class="text-muted">Not specified</span>
@@ -462,7 +463,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-clock me-2"></i> Availability</td>
                         <td class="value-col">
-                            @forelse($employee->employee->availabilities as $availability)
+                            @forelse(optional($employee->employee)->availabilities ?? [] as $availability)
                                 <span class="badge-professional">{{ $availability->name }}</span>
                             @empty
                                 <span class="text-muted">Not specified</span>
@@ -472,7 +473,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-star me-2"></i> Specializations</td>
                         <td class="value-col">
-                            @forelse($employee->employee->employeeSpecializations as $specialization)
+                            @forelse(optional($employee->employee)->employeeSpecializations ?? [] as $specialization)
                                 <span class="badge-professional">{{ $specialization->name }}</span>
                             @empty
                                 <span class="text-muted">Not specified</span>
@@ -482,7 +483,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-tools me-2"></i> Skills</td>
                         <td class="value-col">
-                            @forelse($employee->employee->skills as $skill)
+                            @forelse(optional($employee->employee)->skills ?? [] as $skill)
                                 <span class="badge-professional">{{ $skill->name }}</span>
                             @empty
                                 <span class="text-muted">Not specified</span>
@@ -492,7 +493,7 @@
                     <tr>
                         <td class="label-col"><i class="fas fa-map-marked-alt me-2"></i> Preferred Locations</td>
                         <td class="value-col">
-                            @forelse($employee->employee->jobPreferenceLocations as $location)
+                            @forelse(optional($employee->employee)->jobPreferenceLocations ?? [] as $location)
                                 <span class="badge-professional">{{ $location->name }}</span>
                             @empty
                                 <span class="text-muted">Not specified</span>
@@ -502,7 +503,7 @@
                 </table>
 
                 <!-- CV Button -->
-                
+
             </div>
         </div>
     </main>

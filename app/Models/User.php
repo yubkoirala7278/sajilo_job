@@ -26,17 +26,6 @@ class User extends Authenticatable implements MustVerifyEmail
         Mail::to($this->email)->send(new ResetPasswordMail($token, $this->email));
     }
 
-    // Check if the user is online
-    public function isOnline()
-    {
-        return Cache::has('user-is-online-' . $this->id);
-    }
-    // Add logic to set user online status
-    public function setOnlineStatus()
-    {
-        Cache::put('user-is-online-' . $this->id, true, Carbon::now()->addMinutes(5));
-    }
-
     /**
      * Send the email verification notification.
      *
@@ -59,8 +48,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'slug',
         'avatar',
-        'last_login_at',
-        'last_seen_at'
     ];
 
     protected static function boot()
@@ -107,13 +94,16 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'last_login_at' => 'datetime',
-        'last_seen_at' => 'datetime',
     ];
 
     // Relationship with Employee
     public function employee()
     {
         return $this->hasOne(Employee::class);
+    }
+
+    // Relationship with Employer
+    public function employer(){
+        return $this->hasOne(Employer::class);
     }
 }

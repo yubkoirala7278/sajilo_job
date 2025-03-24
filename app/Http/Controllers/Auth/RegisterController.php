@@ -86,12 +86,12 @@ class RegisterController extends Controller
         if ($data['role'] === 'employee') {
             Employee::create([
                 'user_id' => $user->id,
-                'mobile_no' => $data['mobile_no'],
+                'contact_number' => $data['mobile_no'],
             ]);
         } else {
             Employer::create([
                 'user_id' => $user->id,
-                'mobile_no' => $data['mobile_no'],
+                'contact_number' => $data['mobile_no'],
             ]);
         }
         $user->assignRole($data['role']);

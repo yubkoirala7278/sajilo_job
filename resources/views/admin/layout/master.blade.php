@@ -162,6 +162,41 @@
                 </li>
             @endif
 
+            @if (auth()->user() && auth()->user()->hasRole('employer'))
+                {{-- Employer Management --}}
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ route('admin.employer.profile') }}">
+                        <i class="fas fa-address-card"></i>
+                        <span>Edit/Update Profile</span>
+                    </a>
+                </li>
+                {{-- Job Listing Management --}}
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#job-listing-management" data-bs-toggle="collapse"
+                        href="#">
+                        <i class="fas fa-building"></i><span>Job Listing Management</span><i
+                            class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="job-listing-management" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>Add New Job</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>Jobs Listed</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="bi bi-circle"></i><span>Expired Jobs</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
             @if (auth()->user() && auth()->user()->hasRole('admin'))
                 {{-- =======employeer management --}}
                 <li class="nav-item">
@@ -172,18 +207,18 @@
                     </a>
                     <ul id="employeer-management" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="">
+                            <a href="{{ route('admin.employer.management') }}">
                                 <i class="bi bi-circle"></i><span>New Employer/Registrations</span>
                             </a>
                         </li>
                         <li>
-                            <a href="">
-                                <i class="bi bi-circle"></i><span>Suspended Employers</span>
+                            <a href="{{ route('admin.approved.employer.management') }}">
+                                <i class="bi bi-circle"></i><span>Approved Employers</span>
                             </a>
                         </li>
                         <li>
-                            <a href="">
-                                <i class="bi bi-circle"></i><span>Blacklisted Employers</span>
+                            <a href="{{ route('admin.rejected.employer.management') }}">
+                                <i class="bi bi-circle"></i><span>Rejected Employers</span>
                             </a>
                         </li>
                     </ul>
@@ -202,12 +237,12 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{route('approved.job.seeker')}}">
+                            <a href="{{ route('approved.job.seeker') }}">
                                 <i class="bi bi-circle"></i><span>Approved Jobseeker</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{route('rejected.job.seeker')}}">
+                            <a href="{{ route('rejected.job.seeker') }}">
                                 <i class="bi bi-circle"></i><span>Rejected Jobseeker</span>
                             </a>
                         </li>
