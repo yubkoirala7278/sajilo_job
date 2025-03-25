@@ -179,12 +179,12 @@
                     </a>
                     <ul id="job-listing-management" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="">
+                            <a href="{{route('job.create')}}">
                                 <i class="bi bi-circle"></i><span>Add New Job</span>
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="{{route('job.index')}}">
                                 <i class="bi bi-circle"></i><span>Jobs Listed</span>
                             </a>
                         </li>

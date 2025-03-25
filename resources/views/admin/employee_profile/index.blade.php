@@ -648,20 +648,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="row mb-3" id="div_id_nationality">
-                                                    <label for="nationality"
-                                                        class="col-form-label col-sm-3 text-sm-end requiredField">
-                                                        Nationality<span class="text-danger">*</span>
-                                                    </label>
-                                                    <div class="col-sm-8">
-                                                        <input type="text" name="nationality" maxlength="100"
-                                                            class="form-control" required id="nationality"
-                                                            placeholder="Enter your nationality"
-                                                            value="{{ old('nationality', optional($employee)->nationality) }}">
-
-
-                                                    </div>
-                                                </div>
+                                              
 
                                                 <div class="row mb-3" id="div_id_resume">
                                                     <label for="id_resume" class="col-form-label col-sm-3 text-sm-end">
@@ -686,6 +673,25 @@
                                                         <small id="hint_id_profile" class="form-text text-muted">
                                                             Upload your pp size photo in .pdf or .jpg format less than 2 MB.
                                                         </small>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3" id="div_id_country">
+                                                    <label for="country"
+                                                        class="col-form-label col-sm-3 text-sm-end requiredField">
+                                                        country<span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-sm-8">
+                                                        <select name="country"
+                                                        class="form-select" id="country">
+                                                        @if(count($countries))
+                                                            @foreach ($countries as $country)
+                                                            <option value="{{$country->name}}"
+                                                            @if ($employee && $employee->country == $country->name) selected @endif>
+                                                            {{$country->name}}</option> 
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
                                                     </div>
                                                 </div>
 

@@ -83,8 +83,8 @@ class JobSeekerManagementController extends Controller
                         ? ($employee->employee->is_disabled ? 'Yes' : 'No')
                         : 'N/A';
                 })
-                ->addColumn('nationality', function ($employee) {
-                    return $employee->employee->nationality ?? 'N/A';
+                ->addColumn('country', function ($employee) {
+                    return $employee->employee->country ?? 'N/A';
                 })
                 ->addColumn('current_address', function ($employee) {
                     return $employee->employee->current_address ?? 'N/A';
@@ -153,7 +153,7 @@ class JobSeekerManagementController extends Controller
                                     $q->where('job_level', 'like', "%{$search}%")
                                         ->orWhere('gender', 'like', "%{$search}%")
                                         ->orWhere('marital_status', 'like', "%{$search}%")
-                                        ->orWhere('nationality', 'like', "%{$search}%")
+                                        ->orWhere('country', 'like', "%{$search}%")
                                         ->orWhere('current_address', 'like', "%{$search}%")
                                         ->orWhere('permanent_address', 'like', "%{$search}%")
                                         ->orWhere('contact_number', 'like', "%{$search}%")

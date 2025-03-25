@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateEmployeeBasicInformation;
 use App\Http\Requests\UpdateEmployeeJobPreferences;
+use App\Models\Country;
 use App\Models\Course;
 use App\Models\Degree;
 use App\Models\Employee;
@@ -96,6 +97,9 @@ class EmployeeController extends Controller
             // get employee social account
             $employee_social_accounts = EmployeeSocialAccount::where('employee_id', optional($employee)->id)->get();
 
+            // get all the countries
+            $countries=Country::orderBy('name','asc')->get();
+
 
             return view('admin.employee_profile.index', compact(
                 'employee',
@@ -119,7 +123,8 @@ class EmployeeController extends Controller
                 'organization_natures',
                 'employee_experiences',
                 'employee_languages',
-                'employee_social_accounts'
+                'employee_social_accounts',
+                'countries'
             ));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
@@ -206,7 +211,7 @@ class EmployeeController extends Controller
                     'marital_status' => $request->marital_status,
                     'religion_id' => $request->religion,
                     'is_disabled' => $request->has('is_disabled'),
-                    'nationality' => $request->nationality,
+                    'country' => $request->country,
                     'resume' => $resumePath,
                     'profile' => $profilePath,
                     'current_address' => $request->current_address,

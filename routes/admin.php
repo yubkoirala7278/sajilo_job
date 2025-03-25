@@ -10,6 +10,7 @@ use App\Http\Controllers\admin\EmployerController;
 use App\Http\Controllers\admin\EmployerManagementController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\JobCategoryController;
+use App\Http\Controllers\admin\JobController;
 use App\Http\Controllers\admin\JobPreferenceLocationController;
 use App\Http\Controllers\admin\JobSeekerManagementController;
 use App\Http\Controllers\admin\JobTitleController;
@@ -101,4 +102,8 @@ Route::get('/fetch-latest-notification', [ChatController::class, 'fetchLatestNot
 Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::get('/employer_profile', [EmployerController::class, 'index'])->name('admin.employer.profile');
     Route::put('/employer_profile', [EmployerController::class, 'update'])->name('admin.employer.profile.update');
+    Route::resources([
+        'job' => JobController::class,
+    ]);
+    Route::patch('/job/{job}/toggle-status', [JobController::class, 'toggleStatus'])->name('admin.job.toggle-status');
 });

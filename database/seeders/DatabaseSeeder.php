@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             ReligionSeeder::class,
             DegreeCourseSeeder::class,
             OrganizationNatureSeeder::class,
+            CountrySeeder::class,
 
             // fake
             UserSeeder::class

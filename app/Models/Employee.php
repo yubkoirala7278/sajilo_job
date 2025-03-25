@@ -26,7 +26,7 @@ class Employee extends Model
         'marital_status',
         'religion_id',
         'is_disabled',
-        'nationality',
+        'country',
         'resume',
         'current_address',
         'permanent_address',

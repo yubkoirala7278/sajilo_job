@@ -215,8 +215,8 @@
 
                     </tr>
                     <tr>
-                        <td class="label-col"><i class="fas fa-flag me-2"></i> Nationality</td>
-                        <td class="value-col">{{ $employee->employee->nationality ?? 'N/A' }}</td>
+                        <td class="label-col"><i class="fas fa-flag me-2"></i> country</td>
+                        <td class="value-col">{{ $employee->employee->country ?? 'N/A' }}</td>
                     </tr>
                 </table>
 

@@ -53,8 +53,8 @@ return new class extends Migration
             // is disabled
             $table->boolean('is_disabled')->default(false);
 
-            // nationality
-            $table->string('nationality')->nullable();
+            // country
+            $table->string('country')->nullable();
 
             // resume
             $table->string('resume')->nullable();

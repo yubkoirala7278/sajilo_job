@@ -40,7 +40,7 @@
                                     <th>Marital Status</th>
                                     <th>Religion</th>
                                     <th>Is Disabled</th>
-                                    <th>Nationality</th>
+                                    <th>country</th>
                                     <th>Current Address</th>
                                     <th>Permanent Address</th>
                                     <th>Contact Number</th>
@@ -128,8 +128,8 @@
                         name: 'is_disabled'
                     },
                     {
-                        data: 'nationality',
-                        name: 'nationality'
+                        data: 'country',
+                        name: 'country'
                     },
                     {
                         data: 'current_address',

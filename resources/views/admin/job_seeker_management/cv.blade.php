@@ -135,8 +135,8 @@
                 </span>
             </div>
             <div class="cv-item">
-                <span class="cv-label">Nationality:</span>
-                <span class="cv-value">{{ $employee->employee->nationality ?? 'N/A' }}</span>
+                <span class="cv-label">country:</span>
+                <span class="cv-value">{{ $employee->employee->country ?? 'N/A' }}</span>
             </div>
         </div>
 
