@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+* {
+    font-family: "Manrope", sans-serif;
+    font-style: normal;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+    /* Smooth rotation */
+}
+
+/* Default state (collapsed) */
+.nav-link.collapsed .arrow {
+    transform: rotate(0deg);
+    /* Downward */
+}
+
+/* Expanded state */
+.nav-link:not(.collapsed) .arrow {
+    transform: rotate(180deg);
+    /* Upward */
+}
+
+
+.small-font {
+    font-size: 14px;
+}
+
+.light-gray-color {
+    color: rgb(145, 145, 145);
+}
+
+.light-gray-bg{
+    background: rgb(230, 230, 230) !important;
+}
+
+
+.batch-red {
+    padding: 2px 10px;
+    height: fit-content;
+    border-radius: 25px;
+    color: red;
+    background-color: rgb(255, 195, 195);
+    font-size: small;
+}
+
+
+.batch-blue {
+    padding: 2px 10px;
+    height: fit-content;
+    border-radius: 25px;
+    color: rgb(110, 110, 255);
+    background-color: rgb(236, 231, 255);
+    font-size: small;
+}
+
+.dot{
+    display: block;
+    height: 4px;
+    width: 4px;
+    border-radius: 100%;
+}

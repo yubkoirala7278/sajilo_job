@@ -9,24 +9,29 @@
             border: 1px solid #ced4da;
             border-radius: 0.375rem;
         }
+
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: #2C3E50;
             color: white;
             border-radius: 0.25rem;
         }
+
         .card-header {
             background: linear-gradient(45deg, #2C3E50, #4A6278);
             color: white;
         }
+
         .form-label {
             color: #2C3E50;
             font-weight: 600;
         }
+
         .btn-primary {
             background: #2C3E50;
             border: none;
             transition: all 0.3s ease;
         }
+
         .btn-primary:hover {
             background: #4A6278;
             transform: translateY(-2px);
@@ -69,7 +74,8 @@
                                 </div>
                             </div>
                             <div class="card-body p-4">
-                                <form action="{{ route('job.update', $job->slug) }}" method="POST" class="needs-validation" novalidate>
+                                <form action="{{ route('job.update', $job->slug) }}" method="POST" class="needs-validation"
+                                    novalidate>
                                     @csrf
                                     @method('PUT')
 
@@ -135,7 +141,8 @@
 
                                         <div class="col-md-6">
                                             <label for="employment_type" class="form-label">Employment Type *</label>
-                                            <select class="form-select" id="employment_type" name="employment_type" required>
+                                            <select class="form-select" id="employment_type" name="employment_type"
+                                                required>
                                                 <option value="">Select Type</option>
                                                 @foreach (['Full Time', 'Part Time', 'Contract', 'Freelance', 'Internship'] as $type)
                                                     <option value="{{ $type }}"
@@ -151,7 +158,8 @@
 
                                         <div class="col-md-4">
                                             <label for="no_of_vacancy" class="form-label">Vacancies *</label>
-                                            <input type="number" class="form-control" id="no_of_vacancy" name="no_of_vacancy"
+                                            <input type="number" class="form-control" id="no_of_vacancy"
+                                                name="no_of_vacancy"
                                                 value="{{ old('no_of_vacancy', $job->no_of_vacancy) }}" required
                                                 placeholder="Enter Number of Vacancy">
                                             @error('no_of_vacancy')
@@ -178,25 +186,28 @@
 
                                         <div class="col-md-4">
                                             <label for="job_location" class="form-label">Location *</label>
-                                            <input type="text" class="form-control" id="job_location" name="job_location"
-                                                value="{{ old('job_location', $job->job_location) }}" required
-                                                placeholder="eg: New Baneshwor, Kathmandu">
+                                            <input type="text" class="form-control" id="job_location"
+                                                name="job_location" value="{{ old('job_location', $job->job_location) }}"
+                                                required placeholder="eg: New Baneshwor, Kathmandu">
                                             @error('job_location')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                             @enderror
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label for="offered_salary" class="form-label">Offered Salary (Optional)</label>
+                                            <label for="offered_salary" class="form-label">Offered Salary
+                                                (Optional)</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" id="offered_salary" name="offered_salary"
+                                                <input type="text" class="form-control" id="offered_salary"
+                                                    name="offered_salary"
                                                     value="{{ old('offered_salary', $job->offered_salary) }}"
                                                     placeholder="eg: NRs. 60,000 - 200,000 Monthly">
                                                 <div class="input-group-text">
-                                                    <input class="form-check-input mt-0" type="checkbox" id="is_negotiable"
-                                                        name="is_negotiable" value="1"
+                                                    <input class="form-check-input mt-0" type="checkbox"
+                                                        id="is_negotiable" name="is_negotiable" value="1"
                                                         {{ old('is_negotiable', $job->is_negotiable) ? 'checked' : '' }}>
-                                                    <label class="form-check-label ms-2" for="is_negotiable">Negotiable</label>
+                                                    <label class="form-check-label ms-2"
+                                                        for="is_negotiable">Negotiable</label>
                                                 </div>
                                             </div>
                                             @error('offered_salary')
@@ -206,7 +217,8 @@
 
                                         <div class="col-md-6">
                                             <label for="expiry_date" class="form-label">Expiry Date (Optional)</label>
-                                            <input type="date" class="form-control" id="expiry_date" name="expiry_date"
+                                            <input type="date" class="form-control" id="expiry_date"
+                                                name="expiry_date"
                                                 value="{{ old('expiry_date', $job->expiry_date ? $job->expiry_date->format('Y-m-d') : '') }}">
                                             @error('expiry_date')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
@@ -230,10 +242,12 @@
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label for="experience_required" class="form-label">Experience Required *</label>
-                                            <input type="text" class="form-control" id="experience_required" name="experience_required"
-                                                value="{{ old('experience_required', $job->experience_required) }}" required
-                                                placeholder="More than or equal to -- years">
+                                            <label for="experience_required" class="form-label">Experience Required
+                                                *</label>
+                                            <input type="text" class="form-control" id="experience_required"
+                                                name="experience_required"
+                                                value="{{ old('experience_required', $job->experience_required) }}"
+                                                required placeholder="More than or equal to -- years">
                                             @error('experience_required')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                             @enderror
@@ -248,7 +262,8 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="other_specification" class="form-label">Other Specifications (Optional)</label>
+                                            <label for="other_specification" class="form-label">Other Specifications
+                                                (Optional)</label>
                                             <textarea class="form-control" id="other_specification" name="other_specification" rows="3">{{ old('other_specification', $job->other_specification) }}</textarea>
                                             @error('other_specification')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
@@ -258,8 +273,12 @@
                                         <div class="col-md-6">
                                             <label for="status" class="form-label">Status *</label>
                                             <select class="form-select" id="status" name="status" required>
-                                                <option value="active" {{ old('status', $job->status) == 'active' ? 'selected' : '' }}>Active</option>
-                                                <option value="inactive" {{ old('status', $job->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                                <option value="active"
+                                                    {{ old('status', $job->status) == 'active' ? 'selected' : '' }}>Active
+                                                </option>
+                                                <option value="inactive"
+                                                    {{ old('status', $job->status) == 'inactive' ? 'selected' : '' }}>
+                                                    Inactive</option>
                                             </select>
                                             @error('status')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
@@ -268,7 +287,8 @@
                                     </div>
 
                                     <div class="mt-5 d-flex justify-content-end gap-2">
-                                        <a href="{{ route('job.index') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                                        <a href="{{ route('job.index') }}"
+                                            class="btn btn-outline-secondary px-4">Cancel</a>
                                         <button type="submit" class="btn btn-primary px-4">Update</button>
                                     </div>
                                 </form>
@@ -290,7 +310,9 @@
             editors.forEach(selector => {
                 ClassicEditor
                     .create(document.querySelector(selector), {
-                        removePlugins: ['Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'Indent', 'MediaEmbed']
+                        removePlugins: ['Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar',
+                            'ImageUpload', 'Indent', 'MediaEmbed'
+                        ]
                     })
                     .catch(error => console.error(`Error initializing CKEditor for ${selector}:`, error));
             });

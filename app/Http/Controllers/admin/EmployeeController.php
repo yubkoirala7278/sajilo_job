@@ -98,10 +98,10 @@ class EmployeeController extends Controller
             $employee_social_accounts = EmployeeSocialAccount::where('employee_id', optional($employee)->id)->get();
 
             // get all the countries
-            $countries=Country::orderBy('name','asc')->get();
+            $countries = Country::orderBy('name', 'asc')->get();
 
 
-            return view('admin.employee_profile.index', compact(
+            return view('backend.jobseeker_dashboard.pages.profile.edit', compact(
                 'employee',
                 'job_categories',
                 'selected_job_categories',
@@ -130,7 +130,6 @@ class EmployeeController extends Controller
             return back()->with('error', $th->getMessage());
         }
     }
-
 
     // update employee job preferences
     public function updateJobPreferences(UpdateEmployeeJobPreferences $request)
@@ -459,15 +458,83 @@ class EmployeeController extends Controller
             return back()->with('error', $th->getMessage());
         }
     }
-
-
-
-
-
     // fetch course
     public function fetchCourse($degree_id)
     {
         $courses = Course::where('degree_id', $degree_id)->where('status', 'active')->orderBy('name', 'asc')->get();
         return response()->json($courses);
+    }
+
+
+    // show profile
+    public function show()
+    {
+        try {
+            $employee = Employee::where('user_id', Auth::id())
+                ->with([
+                    'jobCategories',
+                    'preferredIndustries',
+                    'preferredJobTitles',
+                    'availabilities',
+                    'employeeSpecializations',
+                    'skills',
+                    'jobPreferenceLocations',
+                    'trainings',
+                    'experiences',
+                    'languages',
+                    'socialAccounts'
+                ])->firstOrFail();
+
+
+            return view('backend.jobseeker_dashboard.pages.profile.profile', compact('employee'));
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    // job applied
+    public function jobApplied()
+    {
+        try {
+            return view('backend.jobseeker_dashboard.pages.jobsearch_application.jobapplied');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    // interested jobs
+    public function interestedJobs(){
+        try {
+            return view('backend.jobseeker_dashboard.pages.jobsearch_application.jobintrested');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    // rejected jobs
+    public function rejectedJobs(){
+        try{
+            return view('backend.jobseeker_dashboard.pages.jobsearch_application.rejected');
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+     // manage jobs
+     public function manageJob(){
+        try{
+            return view('backend.jobseeker_dashboard.pages.jobsearch_application.managejob');
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    // shortlisted
+    public function shortListed(){
+        try{
+            return view('backend.jobseeker_dashboard.pages.application_interview.shortlisted');
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
     }
 }

@@ -27,7 +27,7 @@ class JobController extends Controller
                 return $this->getJobsDataTable($request, false);
             }
 
-            return view('admin.job.index');
+            return view('backend.employer_dashboard.pages.job');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -114,7 +114,7 @@ class JobController extends Controller
             $degrees = Degree::where('status', 'active')->orderBy('name', 'asc')->get();
             $employee_skills = EmployeeSkill::where('status', 'active')->orderBy('name', 'asc')->get();
             $countries = Country::orderBy('name', 'asc')->get();
-            return view('admin.job.create', compact('categories', 'degrees', 'employee_skills', 'countries'));
+            return view('backend.employer_dashboard.pages.create_job', compact('categories', 'degrees', 'employee_skills', 'countries'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -184,7 +184,7 @@ class JobController extends Controller
     public function show(Job $job)
     {
         try{
-            return view('admin.job.show',compact('job'));
+            return view('backend.employer_dashboard.pages.show_job',compact('job'));
         }catch(\Throwable $th){
             return back()->with('error',$th->getMessage());
         }
@@ -206,7 +206,7 @@ class JobController extends Controller
         $employee_skills = EmployeeSkill::where('status', 'active')->orderBy('name', 'asc')->get();
         $countries = Country::orderBy('name', 'asc')->get();
 
-        return view('admin.job.edit', compact('job', 'categories', 'employee_skills', 'degrees', 'countries'));
+        return view('backend.employer_dashboard.pages.edit_job', compact('job', 'categories', 'employee_skills', 'degrees', 'countries'));
     }
 
     /**
@@ -321,7 +321,7 @@ class JobController extends Controller
                 return $this->getJobsDataTable($request, true);
             }
 
-            return view('admin.job.expired');
+            return view('backend.employer_dashboard.pages.expired_job');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

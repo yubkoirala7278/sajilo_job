@@ -53,6 +53,8 @@ class Employee extends Model
 
     protected $casts = [
         'date_of_birth' => 'date', // Ensures it's treated as a Carbon instance
+        'is_disabled' => 'boolean',
+        'willing_to_travel' => 'boolean',
     ];
 
     // Relationship with job categories
@@ -115,5 +117,25 @@ class Employee extends Model
     // Relationship with language
     public function language(){
         return $this->hasMany(EmployeeLanguage::class);
+    }
+
+    // Relationship with training
+    public function trainings(){
+        return $this->hasMany(EmployeeTraining::class);
+    }
+
+     // Relationship with experiences
+     public function experiences(){
+        return $this->hasMany(EmployeeExperience::class);
+    }
+
+    // Relationship with languages
+    public function languages(){
+        return $this->hasMany(EmployeeLanguage::class);
+    }
+
+    // Relationship with socialAccounts
+    public function socialAccounts(){
+        return $this->hasMany(EmployeeSocialAccount::class);
     }
 }

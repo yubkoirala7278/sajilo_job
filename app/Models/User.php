@@ -48,6 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'slug',
         'avatar',
+        'is_actively_searching'
     ];
 
     protected static function boot()

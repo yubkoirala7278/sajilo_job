@@ -155,7 +155,7 @@
 
             @if (auth()->user() && auth()->user()->hasRole('employee'))
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ route('admin.employee.profile') }}">
+                    <a class="nav-link collapsed" href="{{ route('admin.employee.profile.update') }}">
                         <i class="fas fa-address-card"></i>
                         <span>Employee Profile</span>
                     </a>

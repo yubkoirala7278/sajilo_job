@@ -23,10 +23,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('admin.home');
 
-
 // =============employee============
 Route::middleware(['auth', 'role:employee'])->group(function () {
-    Route::get('/employee_profile', [EmployeeController::class, 'index'])->name('admin.employee.profile');
+    Route::get('/employee_profile_update', [EmployeeController::class, 'index'])->name('admin.employee.profile.update');
+    Route::get('/employee_profile',[EmployeeController::class, 'show'])->name('admin.employee.profile');
+    Route::get('/employee_profile/job_applied',[EmployeeController::class, 'jobApplied'])->name('admin.employee.job.applied');
+    Route::get('/employee_profile/interested_job',[EmployeeController::class, 'interestedJobs'])->name('admin.employee.interested.jobs');
+    Route::get('/employee_profile/rejected_job',[EmployeeController::class, 'rejectedJobs'])->name('admin.employee.rejected.jobs');
+    Route::get('/employee_profile/manage_job',[EmployeeController::class, 'manageJob'])->name('admin.employee.manage.jobs');
+    Route::get('/employee_profile/shortlisted',[EmployeeController::class, 'shortListed'])->name('admin.employee.shortlisted.jobs');
+
+
     Route::put('/update_employee_job_preferences', [EmployeeController::class, 'updateJobPreferences'])->name('update.employee.job.preferences');
     Route::put('/update_employee_basic_information', [EmployeeController::class, 'updateBasicInformation'])->name('update.employee.basic.information');
     Route::put('/update_employee_education', [EmployeeController::class, 'updateEducation'])->name('update.employee.education');
@@ -92,12 +99,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 
-Route::get('/chat/{id}', [ChatController::class, 'chat'])->name('chat');
-Route::post('/send-message', [ChatController::class, 'store'])->name('chat.send');
-Route::get('/messenger', [ChatController::class, 'messenger'])->name('messenger');
-Route::get('/fetch-latest-notification', [ChatController::class, 'fetchLatestNotification']);
-
-
 // =======employer========
 Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::get('/employer_profile', [EmployerController::class, 'index'])->name('admin.employer.profile');
@@ -108,3 +109,12 @@ Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::patch('/job/{job}/toggle-status', [JobController::class, 'toggleStatus'])->name('admin.job.toggle-status');
     Route::get('/expired_jobs',[JobController::class,'expiredJobs'])->name('admin.expired.jobs');
 });
+
+
+
+
+// ========chatting===========
+Route::get('/chat/{id}', [ChatController::class, 'chat'])->name('chat');
+Route::post('/send-message', [ChatController::class, 'store'])->name('chat.send');
+Route::get('/messenger', [ChatController::class, 'messenger'])->name('messenger');
+Route::get('/fetch-latest-notification', [ChatController::class, 'fetchLatestNotification']);

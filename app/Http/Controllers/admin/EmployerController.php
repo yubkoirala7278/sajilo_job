@@ -16,7 +16,8 @@ class EmployerController extends Controller
     {
         try {
             $user=Auth::user();
-            return view('admin.employer.index',compact('user'));
+            return view('backend.employer_dashboard.pages.edit_profile',compact('user'));
+            
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
