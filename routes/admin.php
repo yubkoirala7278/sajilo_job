@@ -106,4 +106,5 @@ Route::middleware(['auth', 'role:employer'])->group(function () {
         'job' => JobController::class,
     ]);
     Route::patch('/job/{job}/toggle-status', [JobController::class, 'toggleStatus'])->name('admin.job.toggle-status');
+    Route::get('/expired_jobs',[JobController::class,'expiredJobs'])->name('admin.expired.jobs');
 });

@@ -189,7 +189,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="{{route('admin.expired.jobs')}}">
                                 <i class="bi bi-circle"></i><span>Expired Jobs</span>
                             </a>
                         </li>

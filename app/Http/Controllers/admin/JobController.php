@@ -24,67 +24,85 @@ class JobController extends Controller
     {
         try {
             if ($request->ajax()) {
-                $jobs = Job::where('user_id', auth()->id())
-                    ->with(['category', 'skills'])
-                    ->select([
-                        'id',
-                        'slug',
-                        'job_title',
-                        'category_id',
-                        'job_level',
-                        'employment_type',
-                        'no_of_vacancy',
-                        'status',
-                        'posted_at',
-                        'expiry_date'
-                    ]);
-
-                return DataTables::of($jobs)
-                    ->addIndexColumn()
-                    ->addColumn('category', function (Job $job) {
-                        return $job->category ? $job->category->category : '-';
-                    })
-                    ->addColumn('skills', function (Job $job) {
-                        return $job->skills->pluck('name')->implode(', ');
-                    })
-                    ->editColumn('posted_at', function (Job $job) {
-                        return $job->posted_at ? Carbon::parse($job->posted_at)->format('Y-m-d') : '-';
-                    })
-                    ->editColumn('expiry_date', function (Job $job) {
-                        return $job->expiry_date ? Carbon::parse($job->expiry_date)->format('Y-m-d') : '-';
-                    })
-                    ->addColumn('action', function (Job $job) {
-                        return '
-                            <a href="' . route('job.edit', $job->slug) . '" 
-                               class="btn btn-warning btn-sm text-white" title="Edit">
-                                <i class="fa-solid fa-pencil"></i>
-                            </a>
-                            <button class="btn btn-dark btn-sm toggle-status-btn" 
-                                    data-slug="' . $job->slug . '" 
-                                    data-status="' . $job->status . '" 
-                                    title="Toggle Status">
-                                <i class="fa-solid fa-toggle-' . ($job->status === 'active' ? 'on' : 'off') . '"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm delete-btn" 
-                                    data-slug="' . $job->slug . '" 
-                                    title="Delete job">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        ';
-                    })
-                    ->editColumn('status', function (Job $job) {
-                        return '<span class="badge ' .
-                            ($job->status === 'active' ? 'bg-success' : 'bg-danger') . '">' .
-                            ucfirst($job->status) . '</span>';
-                    })
-                    ->rawColumns(['action', 'status'])
-                    ->make(true);
+                return $this->getJobsDataTable($request, false);
             }
 
             return view('admin.job.index');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
+    }
+
+    /**
+     * Common function to build DataTable response
+     */
+    private function getJobsDataTable($request, $expiredOnly = false)
+    {
+        $jobs = Job::where('user_id', auth()->id())
+            ->with(['category', 'skills'])
+            ->select([
+                'id',
+                'slug',
+                'job_title',
+                'category_id',
+                'job_level',
+                'employment_type',
+                'no_of_vacancy',
+                'status',
+                'posted_at',
+                'expiry_date'
+            ]);
+
+        // Apply expired jobs filter if requested
+        if ($expiredOnly) {
+            $jobs->whereNotNull('expiry_date')
+                 ->where('expiry_date', '<', Carbon::today());
+        }
+
+        return DataTables::of($jobs)
+            ->addIndexColumn()
+            ->addColumn('category', function (Job $job) {
+                return $job->category ? $job->category->category : '-';
+            })
+            ->addColumn('skills', function (Job $job) {
+                return $job->skills->pluck('name')->implode(', ');
+            })
+            ->editColumn('posted_at', function (Job $job) {
+                return $job->posted_at ? Carbon::parse($job->posted_at)->format('Y-m-d') : '-';
+            })
+            ->editColumn('expiry_date', function (Job $job) {
+                return $job->expiry_date ? Carbon::parse($job->expiry_date)->format('Y-m-d') : '-';
+            })
+            ->addColumn('action', function (Job $job) {
+                return '
+                    <a href="' . route('job.edit', $job->slug) . '" 
+                       class="btn btn-warning btn-sm text-white" title="Edit">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <a href="' . route('job.show', $job->slug) . '" 
+                       class="btn btn-info btn-sm text-white" title="View">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <button class="btn btn-dark btn-sm toggle-status-btn" 
+                            data-slug="' . $job->slug . '" 
+                            data-status="' . $job->status . '" 
+                            title="Toggle Status">
+                        <i class="fa-solid fa-toggle-' . ($job->status === 'active' ? 'on' : 'off') . '"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm delete-btn" 
+                            data-slug="' . $job->slug . '" 
+                            title="Delete job">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                ';
+            })
+            ->editColumn('status', function (Job $job) {
+                return '<span class="badge ' .
+                       ($job->status === 'active' ? 'bg-success' : 'bg-danger') . '">' .
+                       ucfirst($job->status) . '</span>';
+            })
+            ->rawColumns(['action', 'status'])
+            ->make(true);
     }
     /**
      * Show the form for creating a new resource.
@@ -163,9 +181,13 @@ class JobController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Job $job)
     {
-        //
+        try{
+            return view('admin.job.show',compact('job'));
+        }catch(\Throwable $th){
+            return back()->with('error',$th->getMessage());
+        }
     }
 
     /**
@@ -287,6 +309,21 @@ class JobController extends Controller
             return response()->json(['message' => 'Status updated successfully', 'new_status' => $newStatus]);
         } catch (\Throwable $th) {
             return response()->json(['status' => 'error', 'message' => $th->getMessage()]);
+        }
+    }
+
+       /**
+     * Expired Jobs
+     */
+    public function expiredJobs(Request $request){
+        try {
+            if ($request->ajax()) {
+                return $this->getJobsDataTable($request, true);
+            }
+
+            return view('admin.job.expired');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
         }
     }
 }
