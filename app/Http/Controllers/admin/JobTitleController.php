@@ -43,7 +43,7 @@ class JobTitleController extends Controller
                 ->make(true);
         }
 
-        return view('admin.job_title.index');
+        return view('backend.main_dashboard.general_settings.job_title.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class JobTitleController extends Controller
     public function create()
     {
         try {
-            return view('admin.job_title.create');
+            return view('backend.main_dashboard.general_settings.job_title.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -92,7 +92,7 @@ class JobTitleController extends Controller
             if (!$title) {
                 return back()->with('error', 'Job title not found!');
             }
-            return view('admin.job_title.edit', compact('title'));
+            return view('backend.main_dashboard.general_settings.job_title.edit', compact('title'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

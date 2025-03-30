@@ -13,7 +13,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="{{ asset('backend/css/style.css') }}">
+    {{-- jquery --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- sweet alert 2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+   {{-- data table css link --}}
+   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    {{-- toastify css --}}
+    @toastifyCss
+
+    @yield('header-content')
 
 </head>
 
@@ -27,96 +38,135 @@
             </div>
             <ul class="nav flex-column w-100">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#"><i class="fas fa-home me-2"></i> Dashboard</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fa-solid fa-users-gear me-2"></i> Employer Management
+                    <a class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}" href="{{ route('admin.home') }}">
+                        <i class="fas fa-home me-2"></i> Dashboard
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">New Employer/Registrations</a></li>
-                        <li><a class="dropdown-item" href="#">Approved Employers</a></li>
-                        <li><a class="dropdown-item" href="#">Suspended Employers</a></li>
-                        <li><a class="dropdown-item" href="#">Blacklisted Employers</a></li>
-                    </ul>
                 </li>
-                <!-- Jobs Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fas fa-briefcase me-2"></i> Job Listing Management
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">New Job Listing</a></li>
-                        <li><a class="dropdown-item" href="#">Approved Job Listing</a></li>
-                        <li><a class="dropdown-item" href="#">Rejected Job Listing</a></li>
-                        <li><a class="dropdown-item" href="#">All Job Listing</a></li>
-                    </ul>
-                </li>
-                <!-- Applicants Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fas fa-users me-2"></i> JobSeeker Management
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">New Jobseeker Registration</a></li>
-                        <li><a class="dropdown-item" href="#">Approved Jobseeker</a></li>
-                        <li><a class="dropdown-item" href="#">Rejected Jobseeker</a></li>
-                    </ul>
-                </li>
+            
+                <!-- Employer Management Accordion -->
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-plus-circle me-2"></i> Post a Job</a>
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs(['admin.employer.management', 'admin.approved.employer.management', 'admin.suspended.employer.management']) ? 'active' : '' }}"
+                       href="#employerCollapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="employerCollapse">
+                        <i class="fa-solid fa-users-gear me-2"></i> Employer Management
+                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->routeIs(['admin.employer.management', 'admin.approved.employer.management', 'admin.suspended.employer.management']) ? 'show' : '' }}" id="employerCollapse">
+                        <ul class="nav flex-column ms-3">
+                            <li><a class="nav-link {{ request()->routeIs('admin.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.employer.management') }}">New Employer/Registrations</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.approved.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.approved.employer.management') }}">Approved Employers</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.suspended.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.suspended.employer.management') }}">Suspended Employers</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.black.listed.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.black.listed.employer.management') }}">Blacklisted Employers</a></li>
+                        </ul>
+                    </div>
                 </li>
-                <!-- Subscriptions Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            
+                <!-- Applicants Accordion -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs(['job.seeker.management', 'approved.job.seeker', 'rejected.job.seeker']) ? 'active' : '' }}"
+                       href="#jobseekerCollapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="jobseekerCollapse">
+                        <i class="fas fa-users me-2"></i> JobSeeker Management
+                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->routeIs(['job.seeker.management', 'approved.job.seeker', 'rejected.job.seeker']) ? 'show' : '' }}" id="jobseekerCollapse">
+                        <ul class="nav flex-column ms-3">
+                            <li><a class="nav-link {{ request()->routeIs('job.seeker.management') ? 'link-active' : '' }}" href="{{ route('job.seeker.management') }}">New Jobseeker Registration</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('approved.job.seeker') ? 'link-active' : '' }}" href="{{ route('approved.job.seeker') }}">Approved Jobseeker</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('rejected.job.seeker') ? 'link-active' : '' }}" href="{{ route('rejected.job.seeker') }}">Rejected Jobseeker</a></li>
+                        </ul>
+                    </div>
+                </li>
+            
+                <!-- Jobs Accordion -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs(['admin.new.job.management', 'admin.approved.job.management', 'admin.rejected.job.management','admin.all.job.management']) ? 'active' : '' }}" href="#jobCollapse" data-bs-toggle="collapse"
+                       aria-expanded="false" aria-controls="jobCollapse">
+                        <i class="fas fa-briefcase me-2"></i> Job Listing Management
+                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->routeIs(['admin.new.job.management', 'admin.approved.job.management', 'admin.rejected.job.management','admin.all.job.management']) ? 'show' : '' }}" id="jobCollapse">
+                        <ul class="nav flex-column ms-3">
+                            <li><a class="nav-link {{ request()->routeIs('admin.new.job.management') ? 'link-active' : '' }}" href="{{ route('admin.new.job.management') }}">New Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.approved.job.management') ? 'link-active' : '' }}" href="{{ route('admin.approved.job.management') }}">Approved Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.rejected.job.management') ? 'link-active' : '' }}" href="{{ route('admin.rejected.job.management') }}">Rejected Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.all.job.management') ? 'link-active' : '' }}" href="{{ route('admin.all.job.management') }}">All Job Listing</a></li>
+                        </ul>
+                    </div>
+                </li>
+            
+                <!-- Subscriptions Accordion -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href="#paymentCollapse" data-bs-toggle="collapse"
+                       aria-expanded="false" aria-controls="paymentCollapse">
                         <i class="fas fa-credit-card me-2"></i> Payment & Billing Management
+                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Track Employer Subscription</a></li>
-                        <li><a class="dropdown-item" href="#">Generate Invoice & Payment Receipts</a></li>
-                        <li><a class="dropdown-item" href="#">Payment Details</a></li>
-                    </ul>
+                    <div class="collapse" id="paymentCollapse">
+                        <ul class="nav flex-column ms-3">
+                            <li><a class="nav-link" href="#">Track Employer Subscription</a></li>
+                            <li><a class="nav-link" href="#">Generate Invoice & Payment Receipts</a></li>
+                            <li><a class="nav-link" href="#">Payment Details</a></li>
+                        </ul>
+                    </div>
                 </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            
+                <!-- System Settings Accordion -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href="#systemCollapse" data-bs-toggle="collapse"
+                       aria-expanded="false" aria-controls="systemCollapse">
                         <i class="fa-solid fa-gear me-2"></i> System Settings & Security
+                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">User Role Management</a></li>
-                        <li><a class="dropdown-item" href="#">Email's Notification</a></li>
-                    </ul>
+                    <div class="collapse" id="systemCollapse">
+                        <ul class="nav flex-column ms-3">
+                            <li><a class="nav-link" href="#">User Role Management</a></li>
+                            <li><a class="nav-link" href="#">Email's Notification</a></li>
+                        </ul>
+                    </div>
                 </li>
-
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            
+                <!-- General Settings Accordion -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs(['job_category.index', 'technical_skill.index', 'job_title.index', 'preferred_industry.index', 'employee_availability.index', 'employee_specialization.index', 'employee_skill.index', 'job_preference_location.index', 'religion.index', 'employee_degree.index', 'employee_course.index', 'organization_nature.index']) ? 'active' : '' }}"
+                       href="#generalCollapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="generalCollapse">
                         <i class="fa-solid fa-gears me-2"></i> General Settings
+                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Business Category Listing</a></li>
-                        <li><a class="dropdown-item" href="#">Job Positing Listing</a></li>
-                        <li><a class="dropdown-item" href="#">Country Listing</a></li>
-                        <li><a class="dropdown-item" href="#">Skills Listing</a></li>
-                    </ul>
+                    <div class="collapse {{ request()->routeIs(['job_category.index', 'technical_skill.index', 'job_title.index', 'preferred_industry.index', 'employee_availability.index', 'employee_specialization.index', 'employee_skill.index', 'job_preference_location.index', 'religion.index', 'employee_degree.index', 'employee_course.index', 'organization_nature.index']) ? 'show' : '' }}" id="generalCollapse">
+                        <ul class="nav flex-column ms-3">
+                            <li><a href="{{ route('job_category.index') }}" class="nav-link {{ request()->routeIs('job_category.index') ? 'link-active' : '' }}">Job Category</a></li>
+                            <li><a href="{{ route('technical_skill.index') }}" class="nav-link {{ request()->routeIs('technical_skill.index') ? 'link-active' : '' }}">Technical Skill</a></li>
+                            <li><a href="{{ route('job_title.index') }}" class="nav-link {{ request()->routeIs('job_title.index') ? 'link-active' : '' }}">Job Title</a></li>
+                            <li><a href="{{ route('preferred_industry.index') }}" class="nav-link {{ request()->routeIs('preferred_industry.index') ? 'link-active' : '' }}">Job Preferred Industry</a></li>
+                            <li><a href="{{ route('employee_availability.index') }}" class="nav-link {{ request()->routeIs('employee_availability.index') ? 'link-active' : '' }}">Employee Availability</a></li>
+                            <li><a href="{{ route('employee_specialization.index') }}" class="nav-link {{ request()->routeIs('employee_specialization.index') ? 'link-active' : '' }}">Employee Specialization</a></li>
+                            <li><a href="{{ route('employee_skill.index') }}" class="nav-link {{ request()->routeIs('employee_skill.index') ? 'link-active' : '' }}">Employee Skill</a></li>
+                            <li><a href="{{ route('job_preference_location.index') }}" class="nav-link {{ request()->routeIs('job_preference_location.index') ? 'link-active' : '' }}">Job Preference Location</a></li>
+                            <li><a href="{{ route('religion.index') }}" class="nav-link {{ request()->routeIs('religion.index') ? 'link-active' : '' }}">Religion</a></li>
+                            <li><a href="{{ route('employee_degree.index') }}" class="nav-link {{ request()->routeIs('employee_degree.index') ? 'link-active' : '' }}">Employee Degree</a></li>
+                            <li><a href="{{ route('employee_course.index') }}" class="nav-link {{ request()->routeIs('employee_course.index') ? 'link-active' : '' }}">Employee Course</a></li>
+                            <li><a href="{{ route('organization_nature.index') }}" class="nav-link {{ request()->routeIs('organization_nature.index') ? 'link-active' : '' }}">Organization Nature</a></li>
+                        </ul>
+                    </div>
                 </li>
-
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            
+                <!-- Website Accordion -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href="#websiteCollapse" data-bs-toggle="collapse"
+                       aria-expanded="false" aria-controls="websiteCollapse">
                         <i class="fa-solid fa-globe me-2"></i> Website
+                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Home Page</a></li>
-                        <li><a class="dropdown-item" href="#">Pages</a></li>
-                        <li><a class="dropdown-item" href="#">Contact</a></li>
-                        <li><a class="dropdown-item" href="#">Header</a></li>
-                        <li><a class="dropdown-item" href="#">Footer</a></li>
-                        <li><a class="dropdown-item" href="#">Other</a></li>
-                    </ul>
+                    <div class="collapse" id="websiteCollapse">
+                        <ul class="nav flex-column ms-3">
+                            <li><a class="nav-link" href="#">Home Page</a></li>
+                            <li><a class="nav-link" href="#">Pages</a></li>
+                            <li><a class="nav-link" href="#">Contact</a></li>
+                            <li><a class="nav-link" href="#">Header</a></li>
+                            <li><a class="nav-link" href="#">Footer</a></li>
+                            <li><a class="nav-link" href="#">Other</a></li>
+                        </ul>
+                    </div>
                 </li>
-
-
             </ul>
         </div>
     </nav>
@@ -137,186 +187,8 @@
                 </div>
             </div>
         </div>
-
-        <div class="">
-            <h1 class="fw-bold fs-3">Hello, ABC Company</h1>
-            <p>Here is your daily activities and applications</p>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-6">
-                <div class="stat-card-1">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="text-black fw-bold fs-3">589</h5>
-                            <p class="text-muted">Open Jobs</p>
-                        </div>
-                        <i class="fas fa-briefcase fa-2x text-white"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="stat-card-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="text-black fw-bold fs-3">2,517</h5>
-                            <p class="text-muted">Saved Candidates</p>
-                        </div>
-                        <i class="fas fa-users fa-2x text-white"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-8">
-                <div class="card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5>2500 <span class="text-success fw-bold">+4.45%</span></h5>
-                        <select class="form-select w-auto shadow-sm">
-                            <option>This month</option>
-                            <option>Last month</option>
-                            <option>Last quarter</option>
-                        </select>
-                    </div>
-                    <canvas id="lineChart"></canvas>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card p-4">
-                    <h5 class="mb-3">Applicants</h5>
-                    <canvas id="pieChart"></canvas>
-                    <div class="d-flex justify-content-around mt-4">
-                        <div class="text-center">
-                            <span class="badge bg-primary p-2">Hiring Process</span>
-                            <p class="fw-bold mt-2">63%</p>
-                        </div>
-                        <div class="text-center">
-                            <span class="badge bg-info p-2">Select Employer</span>
-                            <p class="fw-bold mt-2">25%</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Applicants Table -->
-        <div class="card p-4">
-            <h5 class="mb-4 fs-4 fw-bold">New Applicants</h5>
-            <table class="table table-hover">
-                <thead>
-                    <tr class="text-muted">
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Job Details</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Ram Sharma</td>
-                        <td><span class="badge bg-success p-2">Active</span></td>
-                        <td>UI/UX Designer <br><small class="text-muted">Full Time - 27 days</small></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm"><i class="fas fa-eye me-2"></i>View</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ram Sharma</td>
-                        <td><span class="badge bg-warning p-2 text-dark">Pending</span></td>
-                        <td>UI/UX Designer <br><small class="text-muted">Full Time - 27 days</small></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm"><i class="fas fa-eye me-2"></i>View</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ram Sharma</td>
-                        <td><span class="badge bg-success p-2">Active</span></td>
-                        <td>UI/UX Designer <br><small class="text-muted">Full Time - 27 days</small></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm"><i class="fas fa-eye me-2"></i>View</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ram Sharma</td>
-                        <td><span class="badge bg-warning p-2 text-dark">Pending</span></td>
-                        <td>UI/UX Designer <br><small class="text-muted">Full Time - 27 days</small></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm"><i class="fas fa-eye me-2"></i>View</button>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="container mt-5">
-            <h2 class="mb-4 fs-4 fw-bold">Recent Post Jobs</h2>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Job</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Application</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td class="text-secondary">UI/UX Designer</td>
-                        <td class="text-success"><i class="fa-solid fa-check border border-2  border-success rounded-pill" style="padding: 2px; font-size:10px;"></i> Active</td>
-                        <td class="text-secondary"><i class="fa-solid fa-users"></i> 798 Application</td>
-                        <td class="d-flex gap-4">
-                            <button class="btn btn-primary rounded-0">Edit Resume</button>
-                            <button class="btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <th scope="row">1</th>
-                        <td class="text-secondary">UI/UX Designer</td>
-                        <td class="text-success"><i class="fa-solid fa-check border border-2  border-success rounded-pill" style="padding: 2px; font-size:10px;"></i> Active</td>
-                        <td class="text-secondary"><i class="fa-solid fa-users"></i> 798 Application</td>
-                        <td class="d-flex gap-4">
-                            <button class="btn btn-primary rounded-0">Edit Resume</button>
-                            <button class="btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                        </td>
-                    </tr>
-
-
-
-                    <tr>
-                        <th scope="row">1</th>
-                        <td class="text-secondary">UI/UX Designer</td>
-                        <td class="text-success"><i class="fa-solid fa-check border border-2  border-success rounded-pill" style="padding: 2px; font-size:10px;"></i> Active</td>
-                        <td class="text-secondary"><i class="fa-solid fa-users"></i> 798 Application</td>
-                        <td class="d-flex gap-4">
-                            <button class="btn btn-primary rounded-0">Edit Resume</button>
-                            <button class="btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                        </td>
-                    </tr>
-
-
-
-                    <tr>
-                        <th scope="row">1</th>
-                        <td class="text-secondary">UI/UX Designer</td>
-                        <td class="text-success"><i class="fa-solid fa-check border border-2  border-success rounded-pill" style="padding: 2px; font-size:10px;"></i> Active</td>
-                        <td class="text-secondary"><i class="fa-solid fa-users"></i> 798 Application</td>
-                        <td class="d-flex gap-4">
-                            <button class="btn btn-primary rounded-0">Edit Resume</button>
-                            <button class="btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
+        {{-- content --}}
+        @yield('content')
 
     </div>
 
@@ -348,57 +220,37 @@
             sidebar.classList.remove('open');
             content.classList.remove('expanded');
         });
+    </script>
 
-        // Line Chart
-        new Chart(document.getElementById('lineChart'), {
-            type: 'line',
-            data: {
-                labels: ['SEP', 'OCT', 'NOV', 'DEC', 'JAN', 'FEB'],
-                datasets: [{
-                    label: 'Applications',
-                    data: [600, 800, 700, 900, 1000, 800],
-                    borderColor: '#4e73df',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(78, 115, 223, 0.1)'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+    {{-- toastify --}}
+    @if (session()->has('success') || session()->has('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if (session()->has('success'))
+                    toastify().success({!! json_encode(session('success')) !!});
+                @endif
+                @if (session()->has('error'))
+                    toastify().error({!! json_encode(session('error')) !!});
+                @endif
+            });
+        </script>
+    @endif
+    {{-- toastify js --}}
+    @toastifyJs
 
-        // Pie Chart
-        new Chart(document.getElementById('pieChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Hiring Process', 'Select Employer'],
-                datasets: [{
-                    data: [63, 25],
-                    backgroundColor: ['#4e73df', '#1cc88a'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
+
+        {{-- data table cdn --}}
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $('.collapse').on('show.bs.collapse', function() {
+            $(this).prev().find('.toggle-arrow').addClass('rotate');
+        }).on('hide.bs.collapse', function() {
+            $(this).prev().find('.toggle-arrow').removeClass('rotate');
         });
     </script>
+
+    @stack('script')
 </body>
 
 </html>

@@ -44,7 +44,7 @@ class ReligionController extends Controller
                 ->make(true);
         }
 
-        return view('admin.religion.index');
+        return view('backend.main_dashboard.general_settings.religion.index');
     }
 
     /**
@@ -53,7 +53,7 @@ class ReligionController extends Controller
     public function create()
     {
         try {
-            return view('admin.religion.create');
+            return view('backend.main_dashboard.general_settings.religion.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -95,7 +95,7 @@ class ReligionController extends Controller
             if (!$religion) {
                 return back()->with('error', 'Religion not found!');
             }
-            return view('admin.religion.edit', compact('religion'));
+            return view('backend.main_dashboard.general_settings.religion.edit', compact('religion'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

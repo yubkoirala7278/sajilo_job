@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -14,17 +15,17 @@ class JobSeekerManagementController extends Controller
      */
     public function index()
     {
-        return view('admin.job_seeker_management.index');
+        return view('backend.main_dashboard.pages.new_job_seeker');
     }
 
     public function approvedJobSeeker()
     {
-        return view('admin.job_seeker_management.approved');
+        return view('backend.main_dashboard.pages.approved_job_seeker');
     }
 
     public function rejectedJobSeeker()
     {
-        return view('admin.job_seeker_management.rejected');
+        return view('backend.main_dashboard.pages.rejected_job_seeker');
     }
 
 
@@ -131,12 +132,16 @@ class JobSeekerManagementController extends Controller
                     return $employee->employee->education_started_month ?? 'N/A';
                 })
                 ->addColumn('status', function ($employee) {
-                    return '<span class="badge ' . ($employee->status == 'active' ? 'bg-success' : 'bg-danger') . '">' .
-                        ucfirst($employee->status) . '</span>';
+                    $statusText = $employee->status == 'active' ? 'Approved' : 'Rejected';
+                    $badgeClass = $employee->status == 'active' ? 'bg-success' : 'bg-danger';
+                
+                    return '<span class="badge ' . $badgeClass . '">' . $statusText . '</span>';
                 })
+                ->rawColumns(['status']) // Ensure HTML rendering
+                
                 ->addColumn('action', function ($employee) {
                     $statusBtn = '<button class="btn btn-dark btn-sm change-status" data-id="' . $employee->id . '" title="Change Status"><i class="fa-solid fa-toggle-on"></i></button>';
-                    $viewBtn = '<a href="' . route('job.seeker.view', $employee->id) . '" class="btn btn-info btn-sm" title="View Employee"><i class="fa-solid fa-eye"></i></a>';
+                    $viewBtn = '<a href="' . route('job.seeker.view', $employee->slug) . '" class="btn btn-info btn-sm" title="View Employee"><i class="fa-solid fa-eye"></i></a>';
                     $deleteBtn = '<button class="btn btn-danger btn-sm delete-btn" data-id="' . $employee->id . '" title="Delete Employee"><i class="fa-solid fa-trash"></i></button>';
                     return $statusBtn . ' ' . $viewBtn . ' ' . $deleteBtn;
                 })
@@ -212,11 +217,31 @@ class JobSeekerManagementController extends Controller
     }
 
 
-    public function view($id)
+    public function view($slug)
     {
         try {
-            $employee = User::role('employee')->with('employee')->findOrFail($id);
-            return view('admin.job_seeker_management.view', compact('employee'));
+            $user=User::where('slug',$slug)->first();
+            if(!$user){
+                return back()->with('error','User not found!');
+            }
+            $employee = Employee::where('user_id', $user->id)
+                ->with([
+                    'jobCategories',
+                    'preferredIndustries',
+                    'preferredJobTitles',
+                    'availabilities',
+                    'employeeSpecializations',
+                    'skills',
+                    'jobPreferenceLocations',
+                    'trainings',
+                    'experiences',
+                    'languages',
+                    'socialAccounts',
+                    'user'
+                ])->firstOrFail();
+
+
+            return view('backend.main_dashboard.pages.show_employee', compact('employee'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

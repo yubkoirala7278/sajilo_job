@@ -43,7 +43,7 @@ class JobCategoryController extends Controller
                 ->make(true);
         }
 
-        return view('admin.job_category.index');
+        return view('backend.main_dashboard.general_settings.job_category.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class JobCategoryController extends Controller
     public function create()
     {
         try {
-            return view('admin.job_category.create');
+            return view('backend.main_dashboard.general_settings.job_category.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -93,7 +93,7 @@ class JobCategoryController extends Controller
             if (!$category) {
                 return back()->with('error', 'Category not found!');
             }
-            return view('admin.job_category.edit', compact('category'));
+            return view('backend.main_dashboard.general_settings.job_category.edit', compact('category'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

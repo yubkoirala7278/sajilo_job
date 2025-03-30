@@ -138,4 +138,9 @@ class Employee extends Model
     public function socialAccounts(){
         return $this->hasMany(EmployeeSocialAccount::class);
     }
+
+    // Relationship with user
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

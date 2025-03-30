@@ -43,7 +43,7 @@ class JobPreferenceLocationController extends Controller
                 ->make(true);
         }
 
-        return view('admin.job_preference_location.index');
+        return view('backend.main_dashboard.general_settings.job_preference_location.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class JobPreferenceLocationController extends Controller
     public function create()
     {
         try {
-            return view('admin.job_preference_location.create');
+            return view('backend.main_dashboard.general_settings.job_preference_location.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -93,7 +93,7 @@ class JobPreferenceLocationController extends Controller
             if (!$location) {
                 return back()->with('error', 'Preference location not found!');
             }
-            return view('admin.job_preference_location.edit', compact('location'));
+            return view('backend.main_dashboard.general_settings.job_preference_location.edit', compact('location'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

@@ -14,8 +14,9 @@ class HomeController extends Controller
                 return view('backend.jobseeker_dashboard.pages.profile.index');
             }else if(Auth::user()->hasRole('employer')){
                 return view('backend.employer_dashboard.pages.home');
+            }else if(Auth::user()->hasRole('admin')){
+                return view('backend.main_dashboard.pages.home');
             }
-            return view('admin.home.index');
         }catch(\Throwable $th){
             return back()->with('error',$th->getMessage());
         }

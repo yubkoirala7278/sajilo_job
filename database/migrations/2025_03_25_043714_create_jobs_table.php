@@ -36,6 +36,7 @@ return new class extends Migration
             $table->text('other_specification')->nullable();
             $table->longText('job_description');
             $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->enum('is_approved', ['pending', 'rejected','approved'])->default('pending');
             $table->timestamps();
         });
     }

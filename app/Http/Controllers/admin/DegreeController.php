@@ -43,7 +43,7 @@ class DegreeController extends Controller
                 ->make(true);
         }
 
-        return view('admin.degree.index');
+        return view('backend.main_dashboard.general_settings.degree.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class DegreeController extends Controller
     public function create()
     {
         try {
-            return view('admin.degree.create');
+            return view('backend.main_dashboard.general_settings.degree.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -94,7 +94,7 @@ class DegreeController extends Controller
             if (!$degree) {
                 return back()->with('error', 'Degree not found!');
             }
-            return view('admin.degree.edit', compact('degree'));
+            return view('backend.main_dashboard.general_settings.degree.edit', compact('degree'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

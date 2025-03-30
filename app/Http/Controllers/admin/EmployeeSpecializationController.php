@@ -43,7 +43,7 @@ class EmployeeSpecializationController extends Controller
                 ->make(true);
         }
 
-        return view('admin.employee_specialization.index');
+        return view('backend.main_dashboard.general_settings.employee_specialization.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class EmployeeSpecializationController extends Controller
     public function create()
     {
         try {
-            return view('admin.employee_specialization.create');
+            return view('backend.main_dashboard.general_settings.employee_specialization.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -93,7 +93,7 @@ class EmployeeSpecializationController extends Controller
             if (!$specialization) {
                 return back()->with('error', 'Employee specialization not found!');
             }
-            return view('admin.employee_specialization.edit', compact('specialization'));
+            return view('backend.main_dashboard.general_settings.employee_specialization.edit', compact('specialization'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

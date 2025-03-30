@@ -48,7 +48,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'slug',
         'avatar',
-        'is_actively_searching'
+        'is_actively_searching',
+        'is_black_listed'
     ];
 
     protected static function boot()
@@ -107,4 +108,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function employer(){
         return $this->hasOne(Employer::class);
     }
+
 }

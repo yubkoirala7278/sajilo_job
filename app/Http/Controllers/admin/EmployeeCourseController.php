@@ -47,7 +47,7 @@ class EmployeeCourseController extends Controller
                 ->make(true);
         }
 
-        return view('admin.employee_course.index');
+        return view('backend.main_dashboard.general_settings.employee_course.index');
     }
 
     /**
@@ -57,7 +57,7 @@ class EmployeeCourseController extends Controller
     {
         try {
             $degrees=Degree::where('status','active')->orderBy('name','asc')->get();
-            return view('admin.employee_course.create',compact('degrees'));
+            return view('backend.main_dashboard.general_settings.employee_course.create',compact('degrees'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -100,7 +100,7 @@ class EmployeeCourseController extends Controller
                 return back()->with('error', 'Employee course not found!');
             }
             $degrees=Degree::where('status','active')->orderBy('name','asc')->get();
-            return view('admin.employee_course.edit', compact('course','degrees'));
+            return view('backend.main_dashboard.general_settings.employee_course.edit', compact('course','degrees'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

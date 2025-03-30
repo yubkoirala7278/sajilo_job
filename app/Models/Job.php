@@ -28,6 +28,7 @@ class Job extends Model
         'other_specification',
         'status',
         'job_views_count',
+        'is_approved'
     ];
 
     /**

@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
 
             // fake
-            UserSeeder::class
+            UserSeeder::class,
+            JobSeeder::class,
         ]);
     }
 }

@@ -13,17 +13,22 @@ class EmployerManagementController extends Controller
     // Display the view
     public function index()
     {
-        return view('admin.employer.all');
+        return view('backend.main_dashboard.pages.employer');
     }
 
     public function approved()
     {
-        return view('admin.employer.approved');
+        return view('backend.main_dashboard.pages.approved_employer');
     }
 
-    public function rejected()
+    public function suspended()
     {
-        return view('admin.employer.rejected');
+        return view('backend.main_dashboard.pages.suspended_employer');
+    }
+
+    public function blackListed()
+    {
+        return view('backend.main_dashboard.pages.black_listed_employer');
     }
 
     // Handle DataTables AJAX request
@@ -38,7 +43,12 @@ class EmployerManagementController extends Controller
             if ($status && $status !== 'all') {
                 $employers->where('status', $status); // Filter by 'active' or 'inactive'
             }
-            // If 'all' or no status, fetch all employers (no additional filter)
+
+            // Filter by black listed if provided
+            $is_black_listed = $request->input('is_black_listed');
+            if ($is_black_listed && $is_black_listed !== 'all') {
+                $employers->where('is_black_listed', (bool) $is_black_listed);
+            }
 
             return DataTables::of($employers)
                 ->addIndexColumn()
@@ -61,8 +71,14 @@ class EmployerManagementController extends Controller
                     return $employer->employer->company_address ?? 'N/A';
                 })
                 ->addColumn('status', function ($employer) {
-                    return '<span class="badge ' . ($employer->status == 'active' ? 'bg-success' : 'bg-danger') . '">' .
-                        ucfirst($employer->status) . '</span>';
+                    $statusText = $employer->status == 'active' ? 'Approved' : 'Suspended';
+                    $badgeClass = $employer->status == 'active' ? 'bg-success' : 'bg-danger';
+                
+                    return '<span class="badge ' . $badgeClass . '">' . $statusText . '</span>';
+                })
+                ->addColumn('is_black_listed', function ($employer) {
+                    return '<span class="badge ' . ($employer->is_black_listed ? 'bg-danger' : 'bg-success') . '">' .
+                        ($employer->is_black_listed ? 'Yes' : 'No') . '</span>';
                 })
                 ->addColumn('action', function ($employer) {
                     $deleteBtn = '<button class="btn btn-danger btn-sm delete-btn" data-id="' . $employer->id . '" title="Delete Employer"><i class="fa-solid fa-trash"></i></button>';
@@ -84,7 +100,7 @@ class EmployerManagementController extends Controller
                         });
                     }
                 })
-                ->rawColumns(['company_logo', 'status', 'action'])
+                ->rawColumns(['company_logo', 'status', 'action','is_black_listed'])
                 ->make(true);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);

@@ -44,7 +44,7 @@ class OrganizationNatureController extends Controller
                 ->make(true);
         }
 
-        return view('admin.organization_nature.index');
+        return view('backend.main_dashboard.general_settings.organization_nature.index');
     }
 
     /**
@@ -53,7 +53,7 @@ class OrganizationNatureController extends Controller
     public function create()
     {
         try {
-            return view('admin.organization_nature.create');
+            return view('backend.main_dashboard.general_settings.organization_nature.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -95,7 +95,7 @@ class OrganizationNatureController extends Controller
             if (!$nature) {
                 return back()->with('error', 'Organization nature not found!');
             }
-            return view('admin.organization_nature.edit', compact('nature'));
+            return view('backend.main_dashboard.general_settings.organization_nature.edit', compact('nature'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

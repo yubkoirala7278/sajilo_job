@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\EmployerManagementController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\JobCategoryController;
 use App\Http\Controllers\admin\JobController;
+use App\Http\Controllers\admin\JobManagementController;
 use App\Http\Controllers\admin\JobPreferenceLocationController;
 use App\Http\Controllers\admin\JobSeekerManagementController;
 use App\Http\Controllers\admin\JobTitleController;
@@ -56,18 +57,29 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/management/data', [JobSeekerManagementController::class, 'getData'])->name('job.seeker.data');
         Route::delete('/management/delete/{id}', [JobSeekerManagementController::class, 'destroy'])->name('job.seeker.delete');
         Route::put('/management/status/{id}', [JobSeekerManagementController::class, 'changeStatus'])->name('job.seeker.status');
-        Route::get('/management/view/{id}', [JobSeekerManagementController::class, 'view'])->name('job.seeker.view');
+        Route::get('/management/view/{slug}', [JobSeekerManagementController::class, 'view'])->name('job.seeker.view');
         Route::get('/management/cv/{id}', [JobSeekerManagementController::class, 'viewCV'])->name('job.seeker.cv');
     });
 
     // employer management
     Route::get('/employer_management', [EmployerManagementController::class, 'index'])->name('admin.employer.management');
     Route::get('/approved_employer_management', [EmployerManagementController::class, 'approved'])->name('admin.approved.employer.management');
-    Route::get('/rejected_employer_management', [EmployerManagementController::class, 'rejected'])->name('admin.rejected.employer.management');
+    Route::get('/suspended_employer_management', [EmployerManagementController::class, 'suspended'])->name('admin.suspended.employer.management');
+    Route::get('/black_listed_employer_management', [EmployerManagementController::class, 'blackListed'])->name('admin.black.listed.employer.management');
     Route::get('/employer_management/data', [EmployerManagementController::class, 'getData'])->name('admin.employer.data');
     Route::post('/employer_management/delete', [EmployerManagementController::class, 'destroy'])->name('admin.employer.delete');
     Route::post('/employer_management/toggle-status/{id}', [EmployerManagementController::class, 'toggleStatus'])->name('admin.employer.toggle');
     Route::get('/employer_management/view/{slug}', [EmployerManagementController::class, 'view'])->name('admin.employer.view');
+
+    // jobs management
+    Route::get('/new_job_management', [JobManagementController::class, 'new'])->name('admin.new.job.management');
+    Route::get('/approved_job_management', [JobManagementController::class, 'approved'])->name('admin.approved.job.management');
+    Route::get('/rejected_job_management', [JobManagementController::class, 'rejected'])->name('admin.rejected.job.management');
+    Route::get('/all_job_management', [JobManagementController::class, 'all'])->name('admin.all.job.management');
+
+
+
+
 
     Route::resources([
         'job_category' => JobCategoryController::class,
@@ -109,7 +121,6 @@ Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::patch('/job/{job}/toggle-status', [JobController::class, 'toggleStatus'])->name('admin.job.toggle-status');
     Route::get('/expired_jobs',[JobController::class,'expiredJobs'])->name('admin.expired.jobs');
 });
-
 
 
 

@@ -43,7 +43,7 @@ class TechnicalSkillController extends Controller
                 ->make(true);
         }
 
-        return view('admin.technical_skill.index');
+        return view('backend.main_dashboard.general_settings.technical_skill.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class TechnicalSkillController extends Controller
     public function create()
     {
         try {
-            return view('admin.technical_skill.create');
+            return view('backend.main_dashboard.general_settings.technical_skill.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -94,7 +94,7 @@ class TechnicalSkillController extends Controller
             if (!$skill) {
                 return back()->with('error', 'Technical skill not found!');
             }
-            return view('admin.technical_skill.edit', compact('skill'));
+            return view('backend.main_dashboard.general_settings.technical_skill.edit', compact('skill'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

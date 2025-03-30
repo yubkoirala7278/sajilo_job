@@ -43,7 +43,7 @@ class EmployeeAvailabilityController extends Controller
                 ->make(true);
         }
 
-        return view('admin.employee_availability.index');
+        return view('backend.main_dashboard.general_settings.employee_availability.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class EmployeeAvailabilityController extends Controller
     public function create()
     {
         try {
-            return view('admin.employee_availability.create');
+            return view('backend.main_dashboard.general_settings.employee_availability.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -93,7 +93,7 @@ class EmployeeAvailabilityController extends Controller
             if (!$availability) {
                 return back()->with('error', 'Employee availability not found!');
             }
-            return view('admin.employee_availability.edit', compact('availability'));
+            return view('backend.main_dashboard.general_settings.employee_availability.edit', compact('availability'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

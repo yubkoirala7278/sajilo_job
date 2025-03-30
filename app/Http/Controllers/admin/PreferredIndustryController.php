@@ -43,7 +43,7 @@ class PreferredIndustryController extends Controller
                 ->make(true);
         }
 
-        return view('admin.preferred_industry.index');
+        return view('backend.main_dashboard.general_settings.preferred_industry.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class PreferredIndustryController extends Controller
     public function create()
     {
         try {
-            return view('admin.preferred_industry.create');
+            return view('backend.main_dashboard.general_settings.preferred_industry.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -93,7 +93,7 @@ class PreferredIndustryController extends Controller
             if (!$industry) {
                 return back()->with('error', 'Preferred industry not found!');
             }
-            return view('admin.preferred_industry.edit', compact('industry'));
+            return view('backend.main_dashboard.general_settings.preferred_industry.edit', compact('industry'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

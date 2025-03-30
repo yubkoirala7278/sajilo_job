@@ -43,7 +43,7 @@ class EmployeeSkillController extends Controller
                 ->make(true);
         }
 
-        return view('admin.employee_skill.index');
+        return view('backend.main_dashboard.general_settings.employee_skill.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class EmployeeSkillController extends Controller
     public function create()
     {
         try {
-            return view('admin.employee_skill.create');
+            return view('backend.main_dashboard.general_settings.employee_skill.create');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -93,7 +93,7 @@ class EmployeeSkillController extends Controller
             if (!$skill) {
                 return back()->with('error', 'Employee skill not found!');
             }
-            return view('admin.employee_skill.edit', compact('skill'));
+            return view('backend.main_dashboard.general_settings.employee_skill.edit', compact('skill'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
