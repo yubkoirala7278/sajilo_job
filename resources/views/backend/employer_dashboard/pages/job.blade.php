@@ -37,7 +37,7 @@
                     <div class="table-responsive">
                         <table class="table job-datatable table-hover w-100" id="jobs-table">
                             <thead class="bg-light">
-                                <tr>
+                                <tr style="white-space: nowrap">
                                     <th>#</th>
                                     <th>Job Title</th>
                                     <th>Category</th>
@@ -47,6 +47,7 @@
                                     <th>Skills</th>
                                     <th>Posted</th>
                                     <th>Expires</th>
+                                    <th>Approval Status</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -107,6 +108,10 @@
                         name: 'expiry_date'
                     },
                     {
+                        data: 'is_approved',
+                        name: 'is_approved'
+                    },
+                    {
                         data: 'status',
                         name: 'status'
                     },
@@ -118,7 +123,7 @@
                     }
                 ],
                 order: [
-                    [7, 'desc']
+                    [8, 'desc']
                 ],
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100],

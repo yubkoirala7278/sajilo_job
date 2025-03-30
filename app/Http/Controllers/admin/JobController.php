@@ -50,7 +50,8 @@ class JobController extends Controller
                 'no_of_vacancy',
                 'status',
                 'posted_at',
-                'expiry_date'
+                'expiry_date',
+                'is_approved'
             ]);
 
         // Apply expired jobs filter if requested
@@ -101,7 +102,16 @@ class JobController extends Controller
                        ($job->status === 'active' ? 'bg-success' : 'bg-danger') . '">' .
                        ucfirst($job->status) . '</span>';
             })
-            ->rawColumns(['action', 'status'])
+            ->editColumn('is_approved', function (Job $job) {
+                $statusLabels = [
+                    'approved' => ['class' => 'bg-success', 'label' => 'Approved'],
+                    'pending' => ['class' => 'bg-warning', 'label' => 'Pending'],
+                    'rejected' => ['class' => 'bg-danger', 'label' => 'Rejected'],
+                ];
+                $status = $statusLabels[$job->is_approved] ?? ['class' => 'bg-secondary', 'label' => ucfirst($job->is_approved)];
+                return '<span class="badge ' . $status['class'] . '">' . $status['label'] . '</span>';
+            })
+            ->rawColumns(['action', 'status','is_approved'])
             ->make(true);
     }
     /**

@@ -59,4 +59,9 @@ class Job extends Model
     {
         return $this->belongsTo(JobCategory::class);
     }
+
+    // Relationship with user
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

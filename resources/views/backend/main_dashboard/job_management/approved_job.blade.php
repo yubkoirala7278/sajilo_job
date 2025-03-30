@@ -22,39 +22,73 @@
 
 
 @section('content')
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-header bg-white py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0" style="color: #2C3E50">Job Listings</h4>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0" style="color: #2C3E50">Job Listings</h4>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body p-4">
-                <div class="table-responsive">
-                    <table class="table job-datatable table-hover w-100" id="jobs-table">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Job Title</th>
-                                <th>Category</th>
-                                <th>Level</th>
-                                <th>Type</th>
-                                <th>Vacancies</th>
-                                <th>Skills</th>
-                                <th>Posted</th>
-                                <th>Expires</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody style="vertical-align: middle"></tbody>
-                    </table>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table job-datatable table-hover w-100" id="jobs-table">
+                            <thead class="bg-light">
+                                <tr style="white-space:nowrap">
+                                    <th>#</th>
+                                    <th>Company</th>
+                                    <th>Job Title</th>
+                                    <th>Category</th>
+                                    <th>Job Level</th>
+                                    <th>Employment Type</th>
+                                    <th>Vacancies</th>
+                                    <th>Skills</th>
+                                    <th>Posted At</th>
+                                    <th>Expiry Date</th>
+                                    <th>Approval Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody style="vertical-align: middle"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+@endsection
+
+@section('modal')
+    <!-- Bootstrap 5 Modal for Changing Approval Status -->
+    <div class="modal fade" id="changeApprovalModal" tabindex="-1" aria-labelledby="changeApprovalModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeApprovalModalLabel">Change Approval Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changeApprovalForm">
+                        @csrf
+                        <input type="hidden" name="slug" id="approvalJobSlug">
+                        <div class="mb-3">
+                            <label for="approvalStatus" class="form-label">Approval Status</label>
+                            <select class="form-select" id="approvalStatus" name="is_approved">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveApprovalBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -70,6 +104,10 @@
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'company_name',
+                        name: 'company_name'
                     },
                     {
                         data: 'job_title',
@@ -166,52 +204,39 @@
                 });
             });
 
-            // Toggle status functionality
-            $(document).on('click', '.toggle-status-btn', function() {
-                var jobSlug = $(this).data('slug');
-                var currentStatus = $(this).data('status');
-                var newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+            // Populate modal with current data when the button is clicked
+            $(document).on('click', '.change-approval-btn', function() {
+                var slug = $(this).data('slug');
+                var currentStatus = $(this).data('current');
 
-                Swal.fire({
-                    title: 'Change Status',
-                    text: `Are you sure you want to change status to ${newStatus}?`,
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, change it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '{{ route('admin.job.toggle-status', ':slug') }}'.replace(
-                                ':slug', jobSlug),
-                            type: 'PATCH',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                                "status": newStatus
-                            },
-                            success: function(response) {
-                                Swal.fire(
-                                    'Success!',
-                                    response.message ||
-                                    'Job status has been updated.',
-                                    'success'
-                                );
-                                table.ajax.reload();
-                            },
-                            error: function(xhr) {
-                                Swal.fire(
-                                    'Error!',
-                                    xhr.responseJSON?.message ||
-                                    'Failed to update status',
-                                    'error'
-                                );
-                            }
-                        });
+                // Set the slug and current status in the modal
+                $('#approvalJobSlug').val(slug);
+                $('#approvalStatus').val(currentStatus);
+            });
+
+            // Handle save button click in the modal
+            $('#saveApprovalBtn').on('click', function() {
+                var slug = $('#approvalJobSlug').val();
+                var newStatus = $('#approvalStatus').val();
+
+                $.ajax({
+                    url: '{{ route('job.update.approval', ':slug') }}'.replace(':slug', slug),
+                    type: 'PUT',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "is_approved": newStatus
+                    },
+                    success: function(response) {
+                        Swal.fire('Success!', 'Approval status updated.', 'success');
+                        $('#changeApprovalModal').modal('hide'); // Close the modal
+                        table.ajax.reload(); // Refresh the DataTable
+                    },
+                    error: function(xhr) {
+                        Swal.fire('Error!', xhr.responseJSON?.error ||
+                            'Failed to update approval status', 'error');
                     }
                 });
             });
         });
     </script>
 @endpush
-

@@ -68,20 +68,7 @@ class JobManagementController extends Controller
      */
     private function getJobsDataTable($request, $job_management)
     {
-        $jobs = Job::with(['category', 'skills'])
-            ->select([
-                'id',
-                'slug',
-                'job_title',
-                'category_id',
-                'job_level',
-                'employment_type',
-                'no_of_vacancy',
-                'status',
-                'posted_at',
-                'expiry_date',
-                'is_approved'
-            ])->where('status', 'active');
+        $jobs = Job::with(['category', 'skills','user'])->where('status', 'active');
 
         // Job Management
         if ($job_management != 'all') {
@@ -103,6 +90,9 @@ class JobManagementController extends Controller
             ->addColumn('skills', function (Job $job) {
                 return $job->skills->pluck('name')->implode(', ');
             })
+            ->addColumn('company_name', function (Job $job) {
+                return $job->user->name;
+            })
             ->editColumn('posted_at', function (Job $job) {
                 return $job->posted_at ? Carbon::parse($job->posted_at)->format('Y-m-d') : '-';
             })
@@ -111,16 +101,18 @@ class JobManagementController extends Controller
             })
             ->addColumn('action', function (Job $job) {
                 return '
-                    <a href="' . route('job.show', $job->slug) . '" 
+                    <a href="' . route('show.job.detail', $job->slug) . '" 
                        class="btn btn-info btn-sm text-white" title="View">
                         <i class="fa-solid fa-eye"></i>
                     </a>
-                    <button class="btn btn-dark btn-sm toggle-status-btn" 
-                            data-slug="' . $job->slug . '" 
-                            data-status="' . $job->status . '" 
-                            title="Toggle Status">
-                        <i class="fa-solid fa-toggle-' . ($job->status === 'active' ? 'on' : 'off') . '"></i>
-                    </button>
+                    <button class="btn btn-dark text-white btn-sm change-approval-btn" 
+                        data-slug="' . $job->slug . '" 
+                        data-current="' . $job->is_approved . '" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#changeApprovalModal" 
+                        title="Change Approval">
+                  <i class="fa-solid fa-toggle-on"></i>
+                </button>
                 ';
             })
             ->editColumn('is_approved', function (Job $job) {
@@ -129,13 +121,29 @@ class JobManagementController extends Controller
                     'pending' => ['class' => 'bg-warning', 'label' => 'Pending'],
                     'rejected' => ['class' => 'bg-danger', 'label' => 'Rejected'],
                 ];
-            
-                // Get the status from the array, fallback to 'unknown' if not found
                 $status = $statusLabels[$job->is_approved] ?? ['class' => 'bg-secondary', 'label' => ucfirst($job->is_approved)];
-            
                 return '<span class="badge ' . $status['class'] . '">' . $status['label'] . '</span>';
             })
             ->rawColumns(['action', 'is_approved'])
             ->make(true);
+    }
+
+
+    public function updateApproval(Request $request, $slug)
+    {
+        try {
+            $job = Job::where('slug', $slug)->firstOrFail();
+            $job->is_approved = $request->input('is_approved');
+            $job->save();
+
+            return response()->json(['message' => 'Approval status updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function showJobDetail($slug){
+        $job=Job::where('slug',$slug)->first();
+        return view('backend.main_dashboard.job_management.show_job',compact('job'));
     }
 }

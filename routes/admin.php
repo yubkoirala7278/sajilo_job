@@ -76,8 +76,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/approved_job_management', [JobManagementController::class, 'approved'])->name('admin.approved.job.management');
     Route::get('/rejected_job_management', [JobManagementController::class, 'rejected'])->name('admin.rejected.job.management');
     Route::get('/all_job_management', [JobManagementController::class, 'all'])->name('admin.all.job.management');
-
-
+    Route::put('/job/{slug}/approval', [JobManagementController::class, 'updateApproval'])->name('job.update.approval');
+    Route::get('/job/{slug}/show', [JobManagementController::class, 'showJobDetail'])->name('show.job.detail');
 
 
 

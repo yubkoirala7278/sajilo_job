@@ -167,6 +167,16 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </li>
             </ul>
         </div>
     </nav>
@@ -189,6 +199,9 @@
         </div>
         {{-- content --}}
         @yield('content')
+
+        {{-- modal --}}
+        @yield('modal')
 
     </div>
 

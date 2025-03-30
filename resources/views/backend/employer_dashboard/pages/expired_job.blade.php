@@ -47,6 +47,7 @@
                                     <th>Skills</th>
                                     <th>Posted</th>
                                     <th>Expires</th>
+                                    <th>Approval Status</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -105,6 +106,10 @@
                     {
                         data: 'expiry_date',
                         name: 'expiry_date'
+                    },
+                    {
+                        data: 'is_approved',
+                        name: 'is_approved'
                     },
                     {
                         data: 'status',
