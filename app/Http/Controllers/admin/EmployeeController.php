@@ -16,6 +16,9 @@ use App\Models\EmployeeSkill;
 use App\Models\EmployeeSocialAccount;
 use App\Models\EmployeeSpecialization;
 use App\Models\EmployeeTraining;
+use App\Models\InterestedJob;
+use App\Models\Job;
+use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobPreferenceLocation;
 use App\Models\JobTitle;
@@ -25,6 +28,9 @@ use App\Models\Religion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class EmployeeController extends Controller
 {
@@ -493,9 +499,111 @@ class EmployeeController extends Controller
     }
 
     // job applied
-    public function jobApplied()
+    public function jobApplied(Request $request)
     {
         try {
+            if ($request->ajax()) {
+                $user = auth()->user();
+                $applications = JobApplication::with('job.user')
+                    ->join('jobs', 'job_applications.job_id', '=', 'jobs.id') // Join jobs table
+                    ->where('job_applications.user_id', $user->id)
+                    ->select('job_applications.*'); // Select only job_applications columns to avoid ambiguity
+
+                return DataTables::of($applications)
+                    ->addIndexColumn()
+                    ->addColumn('job_title', function ($application) {
+                        return $application->job->job_title ?? 'N/A';
+                    })
+                    ->addColumn('company_name', function ($application) {
+                        return $application->job->user->name ?? 'N/A';
+                    })
+                    ->addColumn('category', function ($application) {
+                        return $application->job->category ? $application->job->category->category : 'N/A';
+                    })
+                    ->addColumn('job_level', function ($application) {
+                        return $application->job->job_level ?? 'N/A';
+                    })
+                    ->addColumn('employment_type', function ($application) {
+                        return $application->job->employment_type ?? 'N/A';
+                    })
+                    ->addColumn('vacancies', function ($application) {
+                        return $application->job->no_of_vacancy ?? 'N/A';
+                    })
+                    ->addColumn('location', function ($application) {
+                        return $application->job->job_country . ', ' . $application->job->job_location;
+                    })
+                    ->addColumn('salary', function ($application) {
+                        return $application->job->is_negotiable ? 'Negotiable' : ($application->job->offered_salary ?? 'Not Specified');
+                    })
+                    ->addColumn('posted_at', function ($application) {
+                        return $application->job->posted_at ? $application->job->posted_at->format('M d, Y') : 'N/A';
+                    })
+                    ->addColumn('deadline', function ($application) {
+                        return $application->job->expiry_date ? $application->job->expiry_date->format('M d, Y') : 'N/A';
+                    })
+                    ->addColumn('applied_at', function ($application) {
+                        return $application->applied_at->format('M d, Y H:i');
+                    })
+                    ->addColumn('status', function ($application) {
+                        $badgeClass = match ($application->status) {
+                            'selected' => 'bg-success',
+                            'rejected' => 'bg-danger',
+                            'reviewed' => 'bg-info',
+                            'shortlisted' => 'bg-primary',
+                            default => 'bg-warning',
+                        };
+                        return '<span class="badge ' . $badgeClass . '">' . ucfirst($application->status) . '</span>';
+                    })
+                    ->addColumn('cover_letter', function ($application) {
+                        return $application->cover_letter ? Str::limit($application->cover_letter, 50) : 'N/A';
+                    })
+                    ->rawColumns(['status'])
+                    ->filterColumn('job_title', function ($query, $keyword) {
+                        $query->where('jobs.job_title', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('company_name', function ($query, $keyword) {
+                        $query->whereHas('job.user', function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('category', function ($query, $keyword) {
+                        $query->whereHas('job.category', function ($q) use ($keyword) {
+                            $q->where('category', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('job_level', function ($query, $keyword) {
+                        $query->where('jobs.job_level', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('employment_type', function ($query, $keyword) {
+                        $query->where('jobs.employment_type', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('vacancies', function ($query, $keyword) {
+                        $query->where('jobs.no_of_vacancy', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('location', function ($query, $keyword) {
+                        $query->whereRaw("CONCAT(jobs.job_country, ', ', jobs.job_location) LIKE ?", ["%{$keyword}%"]);
+                    })
+                    ->filterColumn('salary', function ($query, $keyword) {
+                        $query->where(function ($q) use ($keyword) {
+                            $q->where('jobs.is_negotiable', 'like', "%{$keyword}%")
+                                ->orWhere('jobs.offered_salary', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('posted_at', function ($query, $keyword) {
+                        $query->where('jobs.posted_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('deadline', function ($query, $keyword) {
+                        $query->where('jobs.expiry_date', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('applied_at', function ($query, $keyword) {
+                        $query->where('job_applications.applied_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('status', function ($query, $keyword) {
+                        $query->where('job_applications.status', 'like', "%{$keyword}%");
+                    })
+                    ->make(true);
+            }
+
             return view('backend.jobseeker_dashboard.pages.jobsearch_application.jobapplied');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
@@ -503,8 +611,121 @@ class EmployeeController extends Controller
     }
 
     // interested jobs
-    public function interestedJobs(){
+    public function interestedJobs(Request $request)
+    {
         try {
+            if ($request->ajax()) {
+                $user = auth()->user();
+                $interestedJobs = InterestedJob::with('job.user.employer')
+                    ->join('jobs', 'interested_jobs.job_id', '=', 'jobs.id') // Join jobs table
+                    ->where('interested_jobs.user_id', $user->id)
+                    ->select('interested_jobs.*'); // Avoid column ambiguity
+
+                return DataTables::of($interestedJobs)
+                    ->addIndexColumn()
+                    ->addColumn('job_title', function ($interestedJob) {
+                        return $interestedJob->job->job_title ?? 'N/A';
+                    })
+                    ->addColumn('company_name', function ($interestedJob) {
+                        return $interestedJob->job->user->name ?? 'N/A';
+                    })
+                    ->addColumn('company_logo', function ($interestedJob) {
+                        $logo = $interestedJob->job->user->employer && $interestedJob->job->user->employer->company_logo
+                            ? asset('storage/' . $interestedJob->job->user->employer->company_logo)
+                            : asset('backend/img/jobs/techskill.jpeg');
+                        return '<img src="' . $logo . '" style="width: 50px; height: 50px;" class="rounded-circle" alt="Company Logo">';
+                    })
+                    ->addColumn('category', function ($interestedJob) {
+                        return $interestedJob->job->category ? $interestedJob->job->category->category : 'N/A';
+                    })
+                    ->addColumn('job_level', function ($interestedJob) {
+                        return $interestedJob->job->job_level ?? 'N/A';
+                    })
+                    ->addColumn('employment_type', function ($interestedJob) {
+                        return $interestedJob->job->employment_type ?? 'N/A';
+                    })
+                    ->addColumn('vacancies', function ($interestedJob) {
+                        return $interestedJob->job->no_of_vacancy ?? 'N/A';
+                    })
+                    ->addColumn('location', function ($interestedJob) {
+                        return $interestedJob->job->job_country . ', ' . $interestedJob->job->job_location;
+                    })
+                    ->addColumn('salary', function ($interestedJob) {
+                        return $interestedJob->job->is_negotiable ? 'Negotiable' : ($interestedJob->job->offered_salary ?? 'Not Specified');
+                    })
+                    ->addColumn('posted_at', function ($interestedJob) {
+                        return $interestedJob->job->posted_at instanceof \Carbon\Carbon
+                            ? $interestedJob->job->posted_at->format('M d, Y')
+                            : ($interestedJob->job->posted_at ? Carbon::parse($interestedJob->job->posted_at)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('deadline', function ($interestedJob) {
+                        return $interestedJob->job->expiry_date instanceof \Carbon\Carbon
+                            ? $interestedJob->job->expiry_date->format('M d, Y')
+                            : ($interestedJob->job->expiry_date ? Carbon::parse($interestedJob->job->expiry_date)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('interested_at', function ($interestedJob) {
+                        return $interestedJob->interested_at instanceof \Carbon\Carbon
+                            ? $interestedJob->interested_at->format('M d, Y H:i')
+                            : ($interestedJob->interested_at ? Carbon::parse($interestedJob->interested_at)->format('M d, Y H:i') : 'N/A');
+                    })
+                    ->addColumn('action', function ($interestedJob) {
+                        $isExpired = $interestedJob->job->expiry_date && ($interestedJob->job->expiry_date instanceof \Carbon\Carbon
+                            ? $interestedJob->job->expiry_date->isPast()
+                            : Carbon::parse($interestedJob->job->expiry_date)->isPast());
+                        $hasApplied = $interestedJob->job->applications()->where('user_id', auth()->id())->exists();
+
+                        if ($isExpired) {
+                            return '<span class="badge bg-danger">Job Expired</span>';
+                        } elseif ($hasApplied) {
+                            return '<span class="badge bg-success">Already Applied</span>';
+                        } else {
+                            return '<button class="btn btn-sm btn-primary apply-now-btn" data-slug="' . $interestedJob->job->slug . '">Apply Now</button>';
+                        }
+                    })
+                    ->rawColumns(['company_logo', 'action'])
+                    ->filterColumn('job_title', function ($query, $keyword) {
+                        $query->where('jobs.job_title', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('company_name', function ($query, $keyword) {
+                        $query->whereHas('job.user', function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('category', function ($query, $keyword) {
+                        $query->whereHas('job.category', function ($q) use ($keyword) {
+                            $q->where('category', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('job_level', function ($query, $keyword) {
+                        $query->where('jobs.job_level', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('employment_type', function ($query, $keyword) {
+                        $query->where('jobs.employment_type', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('vacancies', function ($query, $keyword) {
+                        $query->where('jobs.no_of_vacancy', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('location', function ($query, $keyword) {
+                        $query->whereRaw("CONCAT(jobs.job_country, ', ', jobs.job_location) LIKE ?", ["%{$keyword}%"]);
+                    })
+                    ->filterColumn('salary', function ($query, $keyword) {
+                        $query->where(function ($q) use ($keyword) {
+                            $q->where('jobs.is_negotiable', 'like', "%{$keyword}%")
+                                ->orWhere('jobs.offered_salary', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('posted_at', function ($query, $keyword) {
+                        $query->where('jobs.posted_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('deadline', function ($query, $keyword) {
+                        $query->where('jobs.expiry_date', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('interested_at', function ($query, $keyword) {
+                        $query->where('interested_jobs.interested_at', 'like', "%{$keyword}%");
+                    })
+                    ->make(true);
+            }
+
             return view('backend.jobseeker_dashboard.pages.jobsearch_application.jobintrested');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
@@ -512,29 +733,459 @@ class EmployeeController extends Controller
     }
 
     // rejected jobs
-    public function rejectedJobs(){
-        try{
+    public function rejectedJobs(Request $request)
+    {
+        try {
+            if ($request->ajax()) {
+                $user = auth()->user();
+                $rejectedJobs = JobApplication::with('job.user.employer')
+                    ->join('jobs', 'job_applications.job_id', '=', 'jobs.id') // Join jobs table
+                    ->where('job_applications.user_id', $user->id)
+                    ->where('job_applications.status', 'rejected') // Filter for rejected status
+                    ->select('job_applications.*'); // Avoid column ambiguity
+
+                return DataTables::of($rejectedJobs)
+                    ->addIndexColumn()
+                    ->addColumn('job_title', function ($application) {
+                        return $application->job->job_title ?? 'N/A';
+                    })
+                    ->addColumn('company_name', function ($application) {
+                        return $application->job->user->name ?? 'N/A';
+                    })
+                    ->addColumn('company_logo', function ($application) {
+                        $logo = $application->job->user->employer && $application->job->user->employer->company_logo
+                            ? asset('storage/' . $application->job->user->employer->company_logo)
+                            : asset('backend/img/jobs/techskill.jpeg');
+                        return '<img src="' . $logo . '" style="width: 50px; height: 50px;" class="rounded-circle" alt="Company Logo">';
+                    })
+                    ->addColumn('category', function ($application) {
+                        return $application->job->category ? $application->job->category->category : 'N/A';
+                    })
+                    ->addColumn('job_level', function ($application) {
+                        return $application->job->job_level ?? 'N/A';
+                    })
+                    ->addColumn('employment_type', function ($application) {
+                        return $application->job->employment_type ?? 'N/A';
+                    })
+                    ->addColumn('vacancies', function ($application) {
+                        return $application->job->no_of_vacancy ?? 'N/A';
+                    })
+                    ->addColumn('location', function ($application) {
+                        return $application->job->job_country . ', ' . $application->job->job_location;
+                    })
+                    ->addColumn('salary', function ($application) {
+                        return $application->job->is_negotiable ? 'Negotiable' : ($application->job->offered_salary ?? 'Not Specified');
+                    })
+                    ->addColumn('posted_at', function ($application) {
+                        return $application->job->posted_at instanceof \Carbon\Carbon
+                            ? $application->job->posted_at->format('M d, Y')
+                            : ($application->job->posted_at ? Carbon::parse($application->job->posted_at)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('deadline', function ($application) {
+                        return $application->job->expiry_date instanceof \Carbon\Carbon
+                            ? $application->job->expiry_date->format('M d, Y')
+                            : ($application->job->expiry_date ? Carbon::parse($application->job->expiry_date)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('applied_at', function ($application) {
+                        return $application->applied_at instanceof \Carbon\Carbon
+                            ? $application->applied_at->format('M d, Y H:i')
+                            : ($application->applied_at ? Carbon::parse($application->applied_at)->format('M d, Y H:i') : 'N/A');
+                    })
+                    ->addColumn('status', function ($application) {
+                        return '<span class="badge bg-danger">Rejected</span>';
+                    })
+                    ->addColumn('cover_letter', function ($application) {
+                        return $application->cover_letter ? Str::limit($application->cover_letter, 50) : 'N/A';
+                    })
+                    ->rawColumns(['company_logo', 'status'])
+                    ->filterColumn('job_title', function ($query, $keyword) {
+                        $query->where('jobs.job_title', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('company_name', function ($query, $keyword) {
+                        $query->whereHas('job.user', function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('category', function ($query, $keyword) {
+                        $query->whereHas('job.category', function ($q) use ($keyword) {
+                            $q->where('category', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('job_level', function ($query, $keyword) {
+                        $query->where('jobs.job_level', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('employment_type', function ($query, $keyword) {
+                        $query->where('jobs.employment_type', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('vacancies', function ($query, $keyword) {
+                        $query->where('jobs.no_of_vacancy', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('location', function ($query, $keyword) {
+                        $query->whereRaw("CONCAT(jobs.job_country, ', ', jobs.job_location) LIKE ?", ["%{$keyword}%"]);
+                    })
+                    ->filterColumn('salary', function ($query, $keyword) {
+                        $query->where(function ($q) use ($keyword) {
+                            $q->where('jobs.is_negotiable', 'like', "%{$keyword}%")
+                                ->orWhere('jobs.offered_salary', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('posted_at', function ($query, $keyword) {
+                        $query->where('jobs.posted_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('deadline', function ($query, $keyword) {
+                        $query->where('jobs.expiry_date', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('applied_at', function ($query, $keyword) {
+                        $query->where('job_applications.applied_at', 'like', "%{$keyword}%");
+                    })
+                    ->make(true);
+            }
+
             return view('backend.jobseeker_dashboard.pages.jobsearch_application.rejected');
-        }catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
     }
 
-     // manage jobs
-     public function manageJob(){
-        try{
+    // manage jobs
+    public function manageJob()
+    {
+        try {
             return view('backend.jobseeker_dashboard.pages.jobsearch_application.managejob');
-        }catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
     }
 
     // shortlisted
-    public function shortListed(){
-        try{
+    public function shortListed(Request $request)
+    {
+        try {
+            if ($request->ajax()) {
+                $user = auth()->user();
+                $shortlistedJobs = JobApplication::with('job.user.employer')
+                    ->join('jobs', 'job_applications.job_id', '=', 'jobs.id') // Join jobs table
+                    ->where('job_applications.user_id', $user->id)
+                    ->where('job_applications.status', 'shortlisted') // Filter for shortlisted status
+                    ->select('job_applications.*'); // Avoid column ambiguity
+
+                return DataTables::of($shortlistedJobs)
+                    ->addIndexColumn()
+                    ->addColumn('job_title', function ($application) {
+                        return $application->job->job_title ?? 'N/A';
+                    })
+                    ->addColumn('company_name', function ($application) {
+                        return $application->job->user->name ?? 'N/A';
+                    })
+                    ->addColumn('company_logo', function ($application) {
+                        $logo = $application->job->user->employer && $application->job->user->employer->company_logo
+                            ? asset('storage/' . $application->job->user->employer->company_logo)
+                            : asset('backend/img/jobs/techskill.jpeg');
+                        return '<img src="' . $logo . '" style="width: 50px; height: 50px;" class="rounded-circle" alt="Company Logo">';
+                    })
+                    ->addColumn('category', function ($application) {
+                        return $application->job->category ? $application->job->category->category : 'N/A';
+                    })
+                    ->addColumn('job_level', function ($application) {
+                        return $application->job->job_level ?? 'N/A';
+                    })
+                    ->addColumn('employment_type', function ($application) {
+                        return $application->job->employment_type ?? 'N/A';
+                    })
+                    ->addColumn('vacancies', function ($application) {
+                        return $application->job->no_of_vacancy ?? 'N/A';
+                    })
+                    ->addColumn('location', function ($application) {
+                        return $application->job->job_country . ', ' . $application->job->job_location;
+                    })
+                    ->addColumn('salary', function ($application) {
+                        return $application->job->is_negotiable ? 'Negotiable' : ($application->job->offered_salary ?? 'Not Specified');
+                    })
+                    ->addColumn('posted_at', function ($application) {
+                        return $application->job->posted_at instanceof \Carbon\Carbon
+                            ? $application->job->posted_at->format('M d, Y')
+                            : ($application->job->posted_at ? Carbon::parse($application->job->posted_at)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('deadline', function ($application) {
+                        return $application->job->expiry_date instanceof \Carbon\Carbon
+                            ? $application->job->expiry_date->format('M d, Y')
+                            : ($application->job->expiry_date ? Carbon::parse($application->job->expiry_date)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('applied_at', function ($application) {
+                        return $application->applied_at instanceof \Carbon\Carbon
+                            ? $application->applied_at->format('M d, Y H:i')
+                            : ($application->applied_at ? Carbon::parse($application->applied_at)->format('M d, Y H:i') : 'N/A');
+                    })
+                    ->addColumn('status', function ($application) {
+                        return '<span class="badge bg-info">Shortlisted</span>';
+                    })
+                    ->rawColumns(['company_logo', 'status', 'resume'])
+                    ->filterColumn('job_title', function ($query, $keyword) {
+                        $query->where('jobs.job_title', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('company_name', function ($query, $keyword) {
+                        $query->whereHas('job.user', function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('category', function ($query, $keyword) {
+                        $query->whereHas('job.category', function ($q) use ($keyword) {
+                            $q->where('category', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('job_level', function ($query, $keyword) {
+                        $query->where('jobs.job_level', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('employment_type', function ($query, $keyword) {
+                        $query->where('jobs.employment_type', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('vacancies', function ($query, $keyword) {
+                        $query->where('jobs.no_of_vacancy', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('location', function ($query, $keyword) {
+                        $query->whereRaw("CONCAT(jobs.job_country, ', ', jobs.job_location) LIKE ?", ["%{$keyword}%"]);
+                    })
+                    ->filterColumn('salary', function ($query, $keyword) {
+                        $query->where(function ($q) use ($keyword) {
+                            $q->where('jobs.is_negotiable', 'like', "%{$keyword}%")
+                                ->orWhere('jobs.offered_salary', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('posted_at', function ($query, $keyword) {
+                        $query->where('jobs.posted_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('deadline', function ($query, $keyword) {
+                        $query->where('jobs.expiry_date', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('applied_at', function ($query, $keyword) {
+                        $query->where('job_applications.applied_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('cover_letter', function ($query, $keyword) {
+                        $query->where('job_applications.cover_letter', 'like', "%{$keyword}%");
+                    })
+                    ->make(true);
+            }
+
             return view('backend.jobseeker_dashboard.pages.application_interview.shortlisted');
-        }catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
+        }
+    }
+
+    // apply job
+    public function apply(Request $request, $slug)
+    {
+        try {
+            $job = Job::where('slug', $slug)->firstOrFail();
+
+            // Check if the user is authenticated and has the 'employee' role
+            if (!auth()->check() || !auth()->user()->hasRole('employee')) {
+                return response()->json(['error' => 'You must be an employee to apply.'], 403);
+            }
+
+            // Check if the user has already applied
+            $existingApplication = JobApplication::where('user_id', auth()->id())
+                ->where('job_id', $job->id)
+                ->exists();
+
+            if ($existingApplication) {
+                return response()->json(['error' => 'You have already applied to this job.'], 400);
+            }
+
+            // Create the application
+            JobApplication::create([
+                'user_id' => auth()->id(),
+                'job_id' => $job->id,
+                'status' => 'pending',
+            ]);
+
+            return response()->json(['message' => 'Application submitted successfully!']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    // mark job as interested
+    public function markInterested(Request $request, $slug)
+    {
+        try {
+            $job = Job::where('slug', $slug)->firstOrFail();
+
+            if (!auth()->check() || !auth()->user()->hasRole('employee')) {
+                return response()->json(['error' => 'You must be an employee to mark interest.'], 403);
+            }
+
+            $existingInterest = InterestedJob::where('user_id', auth()->id())
+                ->where('job_id', $job->id)
+                ->exists();
+
+            if ($existingInterest) {
+                return response()->json(['error' => 'You have already marked this job as interested.'], 400);
+            }
+
+            InterestedJob::create([
+                'user_id' => auth()->id(),
+                'job_id' => $job->id,
+            ]);
+
+            return response()->json(['message' => 'Job marked as interested successfully!']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    // selected
+    public function selected(Request $request)
+    {
+        try {
+            if ($request->ajax()) {
+                $user = auth()->user();
+                $shortlistedJobs = JobApplication::with('job.user.employer')
+                    ->join('jobs', 'job_applications.job_id', '=', 'jobs.id') // Join jobs table
+                    ->where('job_applications.user_id', $user->id)
+                    ->where('job_applications.status', 'selected') // Filter for selected status
+                    ->select('job_applications.*'); // Avoid column ambiguity
+
+                return DataTables::of($shortlistedJobs)
+                    ->addIndexColumn()
+                    ->addColumn('job_title', function ($application) {
+                        return $application->job->job_title ?? 'N/A';
+                    })
+                    ->addColumn('company_name', function ($application) {
+                        return $application->job->user->name ?? 'N/A';
+                    })
+                    ->addColumn('company_logo', function ($application) {
+                        $logo = $application->job->user->employer && $application->job->user->employer->company_logo
+                            ? asset('storage/' . $application->job->user->employer->company_logo)
+                            : asset('backend/img/jobs/techskill.jpeg');
+                        return '<img src="' . $logo . '" style="width: 50px; height: 50px;" class="rounded-circle" alt="Company Logo">';
+                    })
+                    ->addColumn('category', function ($application) {
+                        return $application->job->category ? $application->job->category->category : 'N/A';
+                    })
+                    ->addColumn('job_level', function ($application) {
+                        return $application->job->job_level ?? 'N/A';
+                    })
+                    ->addColumn('employment_type', function ($application) {
+                        return $application->job->employment_type ?? 'N/A';
+                    })
+                    ->addColumn('vacancies', function ($application) {
+                        return $application->job->no_of_vacancy ?? 'N/A';
+                    })
+                    ->addColumn('location', function ($application) {
+                        return $application->job->job_country . ', ' . $application->job->job_location;
+                    })
+                    ->addColumn('salary', function ($application) {
+                        return $application->job->is_negotiable ? 'Negotiable' : ($application->job->offered_salary ?? 'Not Specified');
+                    })
+                    ->addColumn('posted_at', function ($application) {
+                        return $application->job->posted_at instanceof \Carbon\Carbon
+                            ? $application->job->posted_at->format('M d, Y')
+                            : ($application->job->posted_at ? Carbon::parse($application->job->posted_at)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('deadline', function ($application) {
+                        return $application->job->expiry_date instanceof \Carbon\Carbon
+                            ? $application->job->expiry_date->format('M d, Y')
+                            : ($application->job->expiry_date ? Carbon::parse($application->job->expiry_date)->format('M d, Y') : 'N/A');
+                    })
+                    ->addColumn('applied_at', function ($application) {
+                        return $application->applied_at instanceof \Carbon\Carbon
+                            ? $application->applied_at->format('M d, Y H:i')
+                            : ($application->applied_at ? Carbon::parse($application->applied_at)->format('M d, Y H:i') : 'N/A');
+                    })
+                    ->addColumn('status', function ($application) {
+                        return '<span class="badge bg-success">Selected</span>';
+                    })
+                    ->rawColumns(['company_logo', 'status', 'resume'])
+                    ->filterColumn('job_title', function ($query, $keyword) {
+                        $query->where('jobs.job_title', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('company_name', function ($query, $keyword) {
+                        $query->whereHas('job.user', function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('category', function ($query, $keyword) {
+                        $query->whereHas('job.category', function ($q) use ($keyword) {
+                            $q->where('category', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('job_level', function ($query, $keyword) {
+                        $query->where('jobs.job_level', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('employment_type', function ($query, $keyword) {
+                        $query->where('jobs.employment_type', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('vacancies', function ($query, $keyword) {
+                        $query->where('jobs.no_of_vacancy', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('location', function ($query, $keyword) {
+                        $query->whereRaw("CONCAT(jobs.job_country, ', ', jobs.job_location) LIKE ?", ["%{$keyword}%"]);
+                    })
+                    ->filterColumn('salary', function ($query, $keyword) {
+                        $query->where(function ($q) use ($keyword) {
+                            $q->where('jobs.is_negotiable', 'like', "%{$keyword}%")
+                                ->orWhere('jobs.offered_salary', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->filterColumn('posted_at', function ($query, $keyword) {
+                        $query->where('jobs.posted_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('deadline', function ($query, $keyword) {
+                        $query->where('jobs.expiry_date', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('applied_at', function ($query, $keyword) {
+                        $query->where('job_applications.applied_at', 'like', "%{$keyword}%");
+                    })
+                    ->filterColumn('cover_letter', function ($query, $keyword) {
+                        $query->where('job_applications.cover_letter', 'like', "%{$keyword}%");
+                    })
+                    ->make(true);
+            }
+
+            return view('backend.jobseeker_dashboard.pages.application_interview.selected');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+
+    // get search status
+    public function getSearchStatus(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            return response()->json([
+                'success' => true,
+                'is_actively_searching' => (bool) $user->is_actively_searching, // Ensure boolean
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    // toggle job searching
+    public function toggleSearching(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            $isActivelySearching = $request->input('is_actively_searching', false);
+            $user->is_actively_searching = filter_var($isActivelySearching, FILTER_VALIDATE_BOOLEAN);
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Search status updated successfully!',
+                'is_actively_searching' => $user->is_actively_searching,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ], 500);
         }
     }
 }

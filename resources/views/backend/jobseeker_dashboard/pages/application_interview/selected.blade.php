@@ -1,23 +1,23 @@
 @extends('backend.jobseeker_dashboard.layouts.master')
 
 @section('header-content')
-<style>
-    tr{
-        white-space: nowrap;
-        vertical-align: middle;
-    }
-</style>
+    <style>
+        tr {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+    </style>
 @endsection
 
 @section('contain')
     <div class="container mt-3">
         <div class="card shadow-sm">
-            <div class="card-header bg-danger text-white">
-                <h4 class="mb-0">My Rejected Jobs</h4>
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">My Selected Jobs</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped" id="rejected-jobs-table">
+                    <table class="table table-hover table-striped" id="selected-jobs-table">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
@@ -48,10 +48,10 @@
     @push('script')
         <script>
             $(document).ready(function() {
-                $('#rejected-jobs-table').DataTable({
+                $('#selected-jobs-table').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{{ route('admin.employee.rejected.jobs') }}',
+                    ajax: '{{ route('admin.employee.selected.jobs') }}',
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
@@ -134,7 +134,7 @@
 
     <style>
         .thead-dark {
-            background-color: #343a40;
+            background-color: #198754;
             color: white;
         }
 
@@ -163,7 +163,8 @@
         }
 
         .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background: #dc3545;
+            background: #198754;
+            /* Matches bg-info */
             color: white !important;
         }
 

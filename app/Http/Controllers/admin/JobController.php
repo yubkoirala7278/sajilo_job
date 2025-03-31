@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\JobRequest;
 use App\Models\Country;
 use App\Models\Degree;
+use App\Models\Employee;
 use App\Models\EmployeeSkill;
 use App\Models\Job;
+use App\Models\JobApplication;
 use App\Models\JobCategory;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -332,6 +335,49 @@ class JobController extends Controller
             }
 
             return view('backend.employer_dashboard.pages.expired_job');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function updateApplicationStatus(Request $request, $id)
+    {
+        try {
+            $application = JobApplication::findOrFail($id);
+
+            if (auth()->user()->id !== $application->job->user_id || !auth()->user()->hasRole('employer')) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $application->status = $request->input('status');
+            $application->save();
+
+            return response()->json(['message' => 'Status updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function jobSeekerProfile($slug){
+        try {
+            $user=User::where('slug',$slug)->first();
+            $employee = Employee::where('user_id', $user->id)
+                ->with([
+                    'jobCategories',
+                    'preferredIndustries',
+                    'preferredJobTitles',
+                    'availabilities',
+                    'employeeSpecializations',
+                    'skills',
+                    'jobPreferenceLocations',
+                    'trainings',
+                    'experiences',
+                    'languages',
+                    'socialAccounts'
+                ])->firstOrFail();
+
+
+            return view('backend.employer_dashboard.pages.employee_profile', compact('employee'));
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

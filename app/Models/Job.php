@@ -61,7 +61,20 @@ class Job extends Model
     }
 
     // Relationship with user
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
+    }
+
+    // Relationship: Applications for this job
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    // Relationship with interested job
+    public function interestedBy()
+    {
+        return $this->hasMany(InterestedJob::class);
     }
 }

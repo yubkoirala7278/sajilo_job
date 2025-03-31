@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
+
 * {
   font-family: "Manrope", sans-serif;
   font-style: normal;
@@ -71,9 +72,11 @@
   width: 100%;
   background-color: #ffffff;
   overflow-y: auto;
-  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+  -ms-overflow-style: none;
+  /* Hide scrollbar in IE and Edge */
   scrollbar-width: none;
 }
+
 .sidebar .sidebar-profile_image {
   margin-top: 20px;
   display: flex;
@@ -82,22 +85,31 @@
   align-items: center;
   justify-content: center;
 }
+
 .sidebar .sidebar-profile_image img {
   width: 150px;
   height: 150px;
   clip-path: circle();
 }
+
 .sidebar .nav .nav-item .nav-link {
   font-size: 1.1rem;
   color: rgb(49, 49, 49);
 }
+
 .sidebar .nav .nav-item .nav-link.active {
   background: rgba(82, 142, 255, 0.3);
   color: #3060ff;
 }
+
 .sidebar .nav .nav-item .nav-link:hover {
-  background: rgba(82, 142, 255, 0.3);
-  color: #3060ff;
+  color: var(--primary-color);
+  background-color: rgba(211, 211, 211, 0.26);
+}
+
+.sidebar .nav-link.link-active {
+  color: var(--primary-color);
+  background-color: rgba(211, 211, 211, 0.26);
 }
 
 /* Sidebar active state (visible on mobile) */
@@ -113,11 +125,13 @@
     width: 300px;
     /* Fixed width for desktop */
   }
+
   .content {
     margin-left: 300px;
     transition: all 0.3s;
   }
 }
+
 .profile-box {
   padding: 20px 14px;
   border-radius: 6px;

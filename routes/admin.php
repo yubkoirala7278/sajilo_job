@@ -31,8 +31,14 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/employee_profile/job_applied',[EmployeeController::class, 'jobApplied'])->name('admin.employee.job.applied');
     Route::get('/employee_profile/interested_job',[EmployeeController::class, 'interestedJobs'])->name('admin.employee.interested.jobs');
     Route::get('/employee_profile/rejected_job',[EmployeeController::class, 'rejectedJobs'])->name('admin.employee.rejected.jobs');
+
     Route::get('/employee_profile/manage_job',[EmployeeController::class, 'manageJob'])->name('admin.employee.manage.jobs');
     Route::get('/employee_profile/shortlisted',[EmployeeController::class, 'shortListed'])->name('admin.employee.shortlisted.jobs');
+    Route::get('/employee_profile/selected',[EmployeeController::class, 'selected'])->name('admin.employee.selected.jobs');
+    Route::post('/job/{slug}/apply', [EmployeeController::class, 'apply'])->name('job.apply');
+    Route::post('/job/{slug}/interested', [EmployeeController::class, 'markInterested'])->name('job.interested');
+    Route::get('/employee_profile/search-status', [EmployeeController::class, 'getSearchStatus'])->name('employee.get.searching')->middleware('auth');
+    Route::post('/employee_profile/toggle-searching', [EmployeeController::class, 'toggleSearching'])->name('employee.toggle.searching')->middleware('auth');
 
 
     Route::put('/update_employee_job_preferences', [EmployeeController::class, 'updateJobPreferences'])->name('update.employee.job.preferences');
@@ -115,6 +121,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::get('/employer_profile', [EmployerController::class, 'index'])->name('admin.employer.profile');
     Route::put('/employer_profile', [EmployerController::class, 'update'])->name('admin.employer.profile.update');
+    Route::put('/application/{id}/status', [JobController::class, 'updateApplicationStatus'])->name('application.update.status');
+    Route::get('/job_seeker_profile/{slug}',[JobController::class,'jobSeekerProfile'])->name('job.seeker.profile');
     Route::resources([
         'job' => JobController::class,
     ]);
