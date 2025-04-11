@@ -28,7 +28,8 @@ class EmployerRequest extends FormRequest
             'company_website'=>'nullable',
             'company_address'=>'required',
             'company_description'=>'required',
-            'company_logo'=>'nullable'
+            'company_logo'=>'nullable',
+            'categories'=>'array|required'
         ];
     }
 }

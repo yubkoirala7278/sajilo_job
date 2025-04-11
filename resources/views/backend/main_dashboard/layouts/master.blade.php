@@ -18,8 +18,8 @@
     {{-- sweet alert 2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-   {{-- data table css link --}}
-   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    {{-- data table css link --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
     {{-- toastify css --}}
     @toastifyCss
@@ -38,81 +38,100 @@
             </div>
             <ul class="nav flex-column w-100">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}" href="{{ route('admin.home') }}">
+                    <a class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}"
+                        href="{{ route('admin.home') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
                 </li>
-            
+
                 <!-- Employer Management Accordion -->
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center {{ request()->routeIs(['admin.employer.management', 'admin.approved.employer.management', 'admin.suspended.employer.management']) ? 'active' : '' }}"
-                       href="#employerCollapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="employerCollapse">
+                        href="#employerCollapse" data-bs-toggle="collapse" aria-expanded="false"
+                        aria-controls="employerCollapse">
                         <i class="fa-solid fa-users-gear me-2"></i> Employer Management
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse {{ request()->routeIs(['admin.employer.management', 'admin.approved.employer.management', 'admin.suspended.employer.management']) ? 'show' : '' }}" id="employerCollapse">
+                    <div class="collapse {{ request()->routeIs(['admin.employer.management', 'admin.approved.employer.management', 'admin.suspended.employer.management']) ? 'show' : '' }}"
+                        id="employerCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link {{ request()->routeIs('admin.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.employer.management') }}">New Employer/Registrations</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('admin.approved.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.approved.employer.management') }}">Approved Employers</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('admin.suspended.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.suspended.employer.management') }}">Suspended Employers</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('admin.black.listed.employer.management') ? 'link-active' : '' }}" href="{{ route('admin.black.listed.employer.management') }}">Blacklisted Employers</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.employer.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.employer.management') }}">New Employer/Registrations</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.approved.employer.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.approved.employer.management') }}">Approved Employers</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.suspended.employer.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.suspended.employer.management') }}">Suspended Employers</a>
+                            </li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.black.listed.employer.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.black.listed.employer.management') }}">Blacklisted
+                                    Employers</a></li>
                         </ul>
                     </div>
                 </li>
-            
+
                 <!-- Applicants Accordion -->
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center {{ request()->routeIs(['job.seeker.management', 'approved.job.seeker', 'rejected.job.seeker']) ? 'active' : '' }}"
-                       href="#jobseekerCollapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="jobseekerCollapse">
+                        href="#jobseekerCollapse" data-bs-toggle="collapse" aria-expanded="false"
+                        aria-controls="jobseekerCollapse">
                         <i class="fas fa-users me-2"></i> JobSeeker Management
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse {{ request()->routeIs(['job.seeker.management', 'approved.job.seeker', 'rejected.job.seeker']) ? 'show' : '' }}" id="jobseekerCollapse">
+                    <div class="collapse {{ request()->routeIs(['job.seeker.management', 'approved.job.seeker', 'rejected.job.seeker']) ? 'show' : '' }}"
+                        id="jobseekerCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link {{ request()->routeIs('job.seeker.management') ? 'link-active' : '' }}" href="{{ route('job.seeker.management') }}">New Jobseeker Registration</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('approved.job.seeker') ? 'link-active' : '' }}" href="{{ route('approved.job.seeker') }}">Approved Jobseeker</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('rejected.job.seeker') ? 'link-active' : '' }}" href="{{ route('rejected.job.seeker') }}">Rejected Jobseeker</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('job.seeker.management') ? 'link-active' : '' }}"
+                                    href="{{ route('job.seeker.management') }}">New Jobseeker Registration</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('approved.job.seeker') ? 'link-active' : '' }}"
+                                    href="{{ route('approved.job.seeker') }}">Approved Jobseeker</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('rejected.job.seeker') ? 'link-active' : '' }}"
+                                    href="{{ route('rejected.job.seeker') }}">Rejected Jobseeker</a></li>
                         </ul>
                     </div>
                 </li>
-            
+
                 <!-- Jobs Accordion -->
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center {{ request()->routeIs(['admin.new.job.management', 'admin.approved.job.management', 'admin.rejected.job.management','admin.all.job.management']) ? 'active' : '' }}" href="#jobCollapse" data-bs-toggle="collapse"
-                       aria-expanded="false" aria-controls="jobCollapse">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs(['admin.new.job.management', 'admin.approved.job.management', 'admin.rejected.job.management', 'admin.all.job.management']) ? 'active' : '' }}"
+                        href="#jobCollapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="jobCollapse">
                         <i class="fas fa-briefcase me-2"></i> Job Listing Management
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse {{ request()->routeIs(['admin.new.job.management', 'admin.approved.job.management', 'admin.rejected.job.management','admin.all.job.management']) ? 'show' : '' }}" id="jobCollapse">
+                    <div class="collapse {{ request()->routeIs(['admin.new.job.management', 'admin.approved.job.management', 'admin.rejected.job.management', 'admin.all.job.management']) ? 'show' : '' }}"
+                        id="jobCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link {{ request()->routeIs('admin.new.job.management') ? 'link-active' : '' }}" href="{{ route('admin.new.job.management') }}">New Job Listing</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('admin.approved.job.management') ? 'link-active' : '' }}" href="{{ route('admin.approved.job.management') }}">Approved Job Listing</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('admin.rejected.job.management') ? 'link-active' : '' }}" href="{{ route('admin.rejected.job.management') }}">Rejected Job Listing</a></li>
-                            <li><a class="nav-link {{ request()->routeIs('admin.all.job.management') ? 'link-active' : '' }}" href="{{ route('admin.all.job.management') }}">All Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.new.job.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.new.job.management') }}">New Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.approved.job.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.approved.job.management') }}">Approved Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.rejected.job.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.rejected.job.management') }}">Rejected Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.all.job.management') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.all.job.management') }}">All Job Listing</a></li>
                         </ul>
                     </div>
                 </li>
-            
+
                 <!-- Subscriptions Accordion -->
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center" href="#paymentCollapse" data-bs-toggle="collapse"
-                       aria-expanded="false" aria-controls="paymentCollapse">
+                        aria-expanded="false" aria-controls="paymentCollapse">
                         <i class="fas fa-credit-card me-2"></i> Payment & Billing Management
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
                     <div class="collapse" id="paymentCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link" href="#">Track Employer Subscription</a></li>
+                            <li><a class="nav-link" href="{{route('admin.subscription.management')}}">Track Employer Subscription</a></li>
                             <li><a class="nav-link" href="#">Generate Invoice & Payment Receipts</a></li>
-                            <li><a class="nav-link" href="#">Payment Details</a></li>
+                            {{-- <li><a class="nav-link" href="#">Payment Details</a></li> --}}
                         </ul>
                     </div>
                 </li>
-            
+
                 <!-- System Settings Accordion -->
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center" href="#systemCollapse" data-bs-toggle="collapse"
-                       aria-expanded="false" aria-controls="systemCollapse">
+                        aria-expanded="false" aria-controls="systemCollapse">
                         <i class="fa-solid fa-gear me-2"></i> System Settings & Security
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
@@ -123,36 +142,62 @@
                         </ul>
                     </div>
                 </li>
-            
+
                 <!-- General Settings Accordion -->
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center {{ request()->routeIs(['job_category.index', 'technical_skill.index', 'job_title.index', 'preferred_industry.index', 'employee_availability.index', 'employee_specialization.index', 'employee_skill.index', 'job_preference_location.index', 'religion.index', 'employee_degree.index', 'employee_course.index', 'organization_nature.index']) ? 'active' : '' }}"
-                       href="#generalCollapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="generalCollapse">
+                        href="#generalCollapse" data-bs-toggle="collapse" aria-expanded="false"
+                        aria-controls="generalCollapse">
                         <i class="fa-solid fa-gears me-2"></i> General Settings
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse {{ request()->routeIs(['job_category.index', 'technical_skill.index', 'job_title.index', 'preferred_industry.index', 'employee_availability.index', 'employee_specialization.index', 'employee_skill.index', 'job_preference_location.index', 'religion.index', 'employee_degree.index', 'employee_course.index', 'organization_nature.index']) ? 'show' : '' }}" id="generalCollapse">
+                    <div class="collapse {{ request()->routeIs(['job_category.index', 'technical_skill.index', 'job_title.index', 'preferred_industry.index', 'employee_availability.index', 'employee_specialization.index', 'employee_skill.index', 'job_preference_location.index', 'religion.index', 'employee_degree.index', 'employee_course.index', 'organization_nature.index']) ? 'show' : '' }}"
+                        id="generalCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a href="{{ route('job_category.index') }}" class="nav-link {{ request()->routeIs('job_category.index') ? 'link-active' : '' }}">Job Category</a></li>
-                            <li><a href="{{ route('technical_skill.index') }}" class="nav-link {{ request()->routeIs('technical_skill.index') ? 'link-active' : '' }}">Technical Skill</a></li>
-                            <li><a href="{{ route('job_title.index') }}" class="nav-link {{ request()->routeIs('job_title.index') ? 'link-active' : '' }}">Job Title</a></li>
-                            <li><a href="{{ route('preferred_industry.index') }}" class="nav-link {{ request()->routeIs('preferred_industry.index') ? 'link-active' : '' }}">Job Preferred Industry</a></li>
-                            <li><a href="{{ route('employee_availability.index') }}" class="nav-link {{ request()->routeIs('employee_availability.index') ? 'link-active' : '' }}">Employee Availability</a></li>
-                            <li><a href="{{ route('employee_specialization.index') }}" class="nav-link {{ request()->routeIs('employee_specialization.index') ? 'link-active' : '' }}">Employee Specialization</a></li>
-                            <li><a href="{{ route('employee_skill.index') }}" class="nav-link {{ request()->routeIs('employee_skill.index') ? 'link-active' : '' }}">Employee Skill</a></li>
-                            <li><a href="{{ route('job_preference_location.index') }}" class="nav-link {{ request()->routeIs('job_preference_location.index') ? 'link-active' : '' }}">Job Preference Location</a></li>
-                            <li><a href="{{ route('religion.index') }}" class="nav-link {{ request()->routeIs('religion.index') ? 'link-active' : '' }}">Religion</a></li>
-                            <li><a href="{{ route('employee_degree.index') }}" class="nav-link {{ request()->routeIs('employee_degree.index') ? 'link-active' : '' }}">Employee Degree</a></li>
-                            <li><a href="{{ route('employee_course.index') }}" class="nav-link {{ request()->routeIs('employee_course.index') ? 'link-active' : '' }}">Employee Course</a></li>
-                            <li><a href="{{ route('organization_nature.index') }}" class="nav-link {{ request()->routeIs('organization_nature.index') ? 'link-active' : '' }}">Organization Nature</a></li>
+                            <li><a href="{{ route('job_category.index') }}"
+                                    class="nav-link {{ request()->routeIs('job_category.index') ? 'link-active' : '' }}">Job
+                                    Category</a></li>
+                            <li><a href="{{ route('technical_skill.index') }}"
+                                    class="nav-link {{ request()->routeIs('technical_skill.index') ? 'link-active' : '' }}">Technical
+                                    Skill</a></li>
+                            <li><a href="{{ route('job_title.index') }}"
+                                    class="nav-link {{ request()->routeIs('job_title.index') ? 'link-active' : '' }}">Job
+                                    Title</a></li>
+                            <li><a href="{{ route('preferred_industry.index') }}"
+                                    class="nav-link {{ request()->routeIs('preferred_industry.index') ? 'link-active' : '' }}">Job
+                                    Preferred Industry</a></li>
+                            <li><a href="{{ route('employee_availability.index') }}"
+                                    class="nav-link {{ request()->routeIs('employee_availability.index') ? 'link-active' : '' }}">Employee
+                                    Availability</a></li>
+                            <li><a href="{{ route('employee_specialization.index') }}"
+                                    class="nav-link {{ request()->routeIs('employee_specialization.index') ? 'link-active' : '' }}">Employee
+                                    Specialization</a></li>
+                            <li><a href="{{ route('employee_skill.index') }}"
+                                    class="nav-link {{ request()->routeIs('employee_skill.index') ? 'link-active' : '' }}">Employee
+                                    Skill</a></li>
+                            <li><a href="{{ route('job_preference_location.index') }}"
+                                    class="nav-link {{ request()->routeIs('job_preference_location.index') ? 'link-active' : '' }}">Job
+                                    Preference Location</a></li>
+                            <li><a href="{{ route('religion.index') }}"
+                                    class="nav-link {{ request()->routeIs('religion.index') ? 'link-active' : '' }}">Religion</a>
+                            </li>
+                            <li><a href="{{ route('employee_degree.index') }}"
+                                    class="nav-link {{ request()->routeIs('employee_degree.index') ? 'link-active' : '' }}">Employee
+                                    Degree</a></li>
+                            <li><a href="{{ route('employee_course.index') }}"
+                                    class="nav-link {{ request()->routeIs('employee_course.index') ? 'link-active' : '' }}">Employee
+                                    Course</a></li>
+                            <li><a href="{{ route('organization_nature.index') }}"
+                                    class="nav-link {{ request()->routeIs('organization_nature.index') ? 'link-active' : '' }}">Organization
+                                    Nature</a></li>
                         </ul>
                     </div>
                 </li>
-            
+
                 <!-- Website Accordion -->
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center" href="#websiteCollapse" data-bs-toggle="collapse"
-                       aria-expanded="false" aria-controls="websiteCollapse">
+                        aria-expanded="false" aria-controls="websiteCollapse">
                         <i class="fa-solid fa-globe me-2"></i> Website
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
@@ -170,7 +215,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -252,7 +297,7 @@
     @toastifyJs
 
 
-        {{-- data table cdn --}}
+    {{-- data table cdn --}}
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
     <script>

@@ -22,12 +22,15 @@ class EmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'mobile_no' => ['required','max:20'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'jobCategory' => ['required', 'exists:job_categories,id'],
-            'password_confirmation'=>['required', 'string', 'min:8']
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
+            'contact_number' => 'required|string|max:20',
+            'company_website' => 'nullable|url|max:255',
+            'company_address' => 'required|string|max:255',
+            'company_logo' => 'nullable|image|max:2048', // Max 2MB
+            'company_description' => 'required|string',
+            'categories' => 'required|array', 
+            'categories.*' => 'exists:job_categories,id', // Each ID must exist in job_categories
         ];
     }
 }

@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\admin\ApplicantController;
 use App\Http\Controllers\admin\DegreeController;
 use App\Http\Controllers\admin\EmployeeAvailabilityController;
 use App\Http\Controllers\admin\EmployeeController;
 use App\Http\Controllers\admin\EmployeeCourseController;
+use App\Http\Controllers\admin\EmployeeSettingController;
 use App\Http\Controllers\admin\EmployeeSkillController;
 use App\Http\Controllers\admin\EmployeeSpecializationController;
 use App\Http\Controllers\admin\EmployerController;
+use App\Http\Controllers\admin\EmployerJobManagement;
 use App\Http\Controllers\admin\EmployerManagementController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\JobCategoryController;
@@ -18,8 +21,10 @@ use App\Http\Controllers\admin\JobTitleController;
 use App\Http\Controllers\admin\OrganizationNatureController;
 use App\Http\Controllers\admin\PreferredIndustryController;
 use App\Http\Controllers\admin\ReligionController;
+use App\Http\Controllers\admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\admin\TechnicalSkillController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\employer\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/home', [HomeController::class, 'index'])->name('admin.home');
@@ -50,6 +55,10 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::put('/update_employee_accounts', [EmployeeController::class, 'updateSocialAccount'])->name('update.employee.account');
     Route::put('/update_employee_other_information', [EmployeeController::class, 'updateOtherInformation'])->name('update.employee.other.information');
     Route::get('/get-courses/{degree_id}', [EmployeeController::class, 'fetchCourse'])->name('fetch.course');
+
+    Route::get('/employee_setting',[EmployeeSettingController::class,'employeeSetting'])->name('employee.setting');
+    Route::put('/jobseeker_profile_update',[EmployeeSettingController::class,'updateProfile'])->name('jobseeker.profile.update');
+
 });
 
 
@@ -113,6 +122,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/employee_degree/toggle-status/{slug}', [DegreeController::class, 'toggleStatus'])->name('employee_degree.toggle-status');
     Route::patch('/employee_course/toggle-status/{slug}', [EmployeeCourseController::class, 'toggleStatus'])->name('employee_course.toggle-status');
     Route::patch('/organization_nature/toggle-status/{slug}', [OrganizationNatureController::class, 'toggleStatus'])->name('organization_nature.toggle-status');
+
+    // subscription management
+    Route::get('subscription_management', [AdminSubscriptionController::class, 'index'])->name('admin.subscription.management');
+    Route::put('subscription_management/{subscription}', [AdminSubscriptionController::class, 'update'])->name('admin.subscriptions.update');
+
 });
 
 
@@ -121,6 +135,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::get('/employer_profile', [EmployerController::class, 'index'])->name('admin.employer.profile');
     Route::put('/employer_profile', [EmployerController::class, 'update'])->name('admin.employer.profile.update');
+    Route::get('/show_employer_profile', [EmployerController::class, 'show'])->name('admin.employer.profile.show');
     Route::put('/application/{id}/status', [JobController::class, 'updateApplicationStatus'])->name('application.update.status');
     Route::get('/job_seeker_profile/{slug}',[JobController::class,'jobSeekerProfile'])->name('job.seeker.profile');
     Route::resources([
@@ -128,6 +143,17 @@ Route::middleware(['auth', 'role:employer'])->group(function () {
     ]);
     Route::patch('/job/{job}/toggle-status', [JobController::class, 'toggleStatus'])->name('admin.job.toggle-status');
     Route::get('/expired_jobs',[JobController::class,'expiredJobs'])->name('admin.expired.jobs');
+
+    Route::get('new_applicants',[ApplicantController::class,'newApplicants'])->name('admin.new.applicants');
+    Route::get('selected_applicants',[ApplicantController::class,'selectedApplicants'])->name('admin.selected.applicants');
+    Route::get('rejected_applicants',[ApplicantController::class,'rejectedApplicants'])->name('admin.rejected.applicants');
+    Route::get('all_applicants',[ApplicantController::class,'allApplicants'])->name('admin.all.applicants');
+    Route::get('shortlisted_applicants',[ApplicantController::class,'shortlistedApplicants'])->name('admin.shortlisted.applicants');
+
+    // subscription
+    Route::get('/employer_subscription',[SubscriptionController::class,'index'])->name('employer.subscription');
+    Route::post('/employer_subscription',[SubscriptionController::class,'store'])->name('employer.subscriptions.store');
+
 });
 
 

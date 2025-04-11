@@ -27,8 +27,8 @@
                 <span class="ms-2 d-none d-md-inline">Admin</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><a class="dropdown-item" href="{{route('admin.employee.profile')}}">Profile</a></li>
+                <li><a class="dropdown-item" href="{{route('employee.setting')}}">Settings</a></li>
                 <li>
                     <hr class="dropdown-divider" />
                 </li>

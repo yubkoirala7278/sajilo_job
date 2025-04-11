@@ -100,14 +100,14 @@
                 </div>
             </li>
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.insights') ? 'active' : '' }}" href="#">
                     <i class="fa-solid fa-chart-column me-1"></i> Insights
                 </a>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}" href="#">
+                <a class="nav-link {{ request()->routeIs('employee.setting') ? 'active' : '' }}" href="{{route('employee.setting')}}">
                     <i class="fa-solid fa-gear me-1"></i> Setting
                 </a>
             </li>

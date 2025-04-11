@@ -66,92 +66,116 @@
                 <h3 class="text-black fw-bold mb-4"><i class="fas fa-rocket me-2"></i> Logo</h3>
             </div>
             <ul class="nav flex-column w-100">
+                <!-- Dashboard -->
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ route('admin.home') }}"><i class="fas fa-home me-2"></i>
-                        Dashboard</a>
+                    <a class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}"
+                        href="{{ route('admin.home') }}">
+                        <i class="fas fa-home me-2"></i> Dashboard
+                    </a>
                 </li>
 
                 <!-- Employer Management Accordion -->
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center" href="#profileCollapse" data-bs-toggle="collapse"
-                        aria-expanded="false" aria-controls="profileCollapse">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs('admin.employer.profile','admin.employer.profile.show') ? 'active' : '' }}"
+                        href="#profileCollapse" data-bs-toggle="collapse"
+                        aria-expanded="{{ request()->routeIs('admin.employer.profile') ? 'true' : 'false' }}"
+                        aria-controls="profileCollapse">
                         <i class="fa-solid fa-users-gear me-2"></i> Profile Management
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse" id="profileCollapse">
+                    <div class="collapse {{ request()->routeIs('admin.employer.profile','admin.employer.profile.show') ? 'show' : '' }}"
+                        id="profileCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link" href="{{ route('admin.employer.profile') }}">Edit/Update Profile</a>
+                            <li>
+                                <a class="nav-link {{ request()->routeIs('admin.employer.profile') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.employer.profile') }}">Edit/Update Profile</a>
                             </li>
-                            <li><a class="nav-link" href="#">Profile URL</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.employer.profile.show') ? 'link-active' : '' }}" href="{{route('admin.employer.profile.show')}}">Visit Profile</a></li>
                         </ul>
                     </div>
                 </li>
 
                 <!-- Jobs Accordion -->
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center" href="#jobCollapse" data-bs-toggle="collapse"
-                        aria-expanded="false" aria-controls="jobCollapse">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs('job.create', 'job.index', 'admin.expired.jobs') ? 'active' : '' }}"
+                        href="#jobCollapse" data-bs-toggle="collapse"
+                        aria-expanded="{{ request()->routeIs('job.create', 'job.index', 'admin.expired.jobs') ? 'true' : 'false' }}"
+                        aria-controls="jobCollapse">
                         <i class="fas fa-briefcase me-2"></i> Job Listing Management
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse" id="jobCollapse">
+                    <div class="collapse {{ request()->routeIs('job.create', 'job.index', 'admin.expired.jobs') ? 'show' : '' }}"
+                        id="jobCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link" href="{{route('job.create')}}">Add New Job</a></li>
-                            <li><a class="nav-link" href="{{route('job.index')}}">Job Listing</a></li>
-                            <li><a class="nav-link" href="{{route('admin.expired.jobs')}}">Expired Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('job.create') ? 'link-active' : '' }}"
+                                    href="{{ route('job.create') }}">Add New Job</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('job.index') ? 'link-active' : '' }}"
+                                    href="{{ route('job.index') }}">Job Listing</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('admin.expired.jobs') ? 'link-active' : '' }}"
+                                    href="{{ route('admin.expired.jobs') }}">Expired Listing</a></li>
                         </ul>
                     </div>
                 </li>
 
                 <!-- Applicants Accordion -->
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center" href="#jobseekerCollapse" data-bs-toggle="collapse"
-                        aria-expanded="false" aria-controls="jobseekerCollapse">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs('admin.new.applicants', 'admin.selected.applicants', 'admin.rejected.applicants', 'admin.all.applicants','admin.shortlisted.applicants') ? 'active' : '' }}" 
+                        href="#jobseekerCollapse" data-bs-toggle="collapse" 
+                        aria-expanded="{{ request()->routeIs('admin.new.applicants', 'admin.selected.applicants', 'admin.rejected.applicants', 'admin.all.applicants','admin.shortlisted.applicants') ? 'true' : 'false' }}" 
+                        aria-controls="jobseekerCollapse">
                         <i class="fas fa-users me-2"></i> Applicants Management
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse" id="jobseekerCollapse">
+                    <div class="collapse {{ request()->routeIs('admin.new.applicants', 'admin.selected.applicants', 'admin.rejected.applicants', 'admin.all.applicants','admin.shortlisted.applicants') ? 'show' : '' }}" 
+                        id="jobseekerCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link" href="#">New Applicants</a></li>
-                            <li><a class="nav-link" href="#">Selected Applicants</a></li>
-                            <li><a class="nav-link" href="#">Rejected Applicants</a></li>
-                            <li><a class="nav-link" href="#">All Applicants</a></li>
+                            <li>
+                                <a class="nav-link {{ request()->routeIs('admin.new.applicants') ? 'link-active' : '' }}" href="{{ route('admin.new.applicants') }}">New Applicants</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->routeIs('admin.shortlisted.applicants') ? 'link-active' : '' }}" href="{{ route('admin.shortlisted.applicants') }}">Shortlisted Applicants</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->routeIs('admin.selected.applicants') ? 'link-active' : '' }}" href="{{ route('admin.selected.applicants') }}">Selected Applicants</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->routeIs('admin.rejected.applicants') ? 'link-active' : '' }}" href="{{ route('admin.rejected.applicants') }}">Rejected Applicants</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->routeIs('admin.all.applicants') ? 'link-active' : '' }}" href="{{ route('admin.all.applicants') }}">All Applicants</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
 
-
-                <!-- Subscriptions Accordion -->
+                <!-- Subscription & Payment Accordion -->
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center" href="#paymentCollapse" data-bs-toggle="collapse"
-                        aria-expanded="false" aria-controls="paymentCollapse">
-                        <i class="fas fa-credit-card me-2"></i> Communication & Interview Scheduling
-                        <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
-                    </a>
-                    <div class="collapse" id="paymentCollapse">
-                        <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link" href="#">Message to Shortlisted Applicants</a></li>
-                            <li><a class="nav-link" href="#">Schudule/Manage Interview Appoinment</a></li>
-                            <li><a class="nav-link" href="#">Video Interview Integrations</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <!-- System Settings Accordion -->
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center" href="#systemCollapse" data-bs-toggle="collapse"
-                        aria-expanded="false" aria-controls="systemCollapse">
+                    <a class="nav-link d-flex align-items-center {{ request()->routeIs('employer.subscription') ? 'active' : '' }}" href="#systemCollapse"
+                        data-bs-toggle="collapse" aria-expanded="false" aria-controls="systemCollapse">
                         <i class="fa-solid fa-gear me-2"></i> Subscription & Payment
                         <i class="fas fa-chevron-down ms-auto toggle-arrow"></i>
                     </a>
-                    <div class="collapse" id="systemCollapse">
+                    <div class="collapse {{ request()->routeIs('employer.subscription') ? 'show' : '' }}" id="systemCollapse">
                         <ul class="nav flex-column ms-3">
-                            <li><a class="nav-link" href="#">Subscription Status</a></li>
+                            <li><a class="nav-link {{ request()->routeIs('employer.subscription') ? 'link-active' : '' }}" href="{{route('employer.subscription')}}">New Subscription</a></li>
                             <li><a class="nav-link" href="#">Payment History & Invoices</a></li>
                         </ul>
                     </div>
                 </li>
             </ul>
+
+              <!-- Logout -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </li>
+
+
         </div>
 
     </nav>

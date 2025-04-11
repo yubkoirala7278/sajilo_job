@@ -70,7 +70,7 @@
         <div class="col-span-12 md:col-span-10 flex justify-center items-center text-center px-4 md:px-0 mt-2 md:mt-0">
             <p class="text-white text-sm md:text-base">
                 Hire Candidate with Flexible Plan.
-                <a href="#" class="text-black hover:text-white underline">Sign Up with Sajilo Job</a>
+                <a href="{{route('register')}}" class="text-black hover:text-white underline">Sign Up with Sajilo Job</a>
             </p>
         </div>
     </div>
@@ -91,8 +91,8 @@
             </button>
             <!-- Sign In/Sign Up Buttons (Hidden on Mobile) -->
             <div class="hidden md:flex gap-2">
-                <a href="#" class="px-6 md:px-8 py-2 border border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-500 hover:text-white duration-200 text-sm md:text-base">Sign In</a>
-                <a href="#" class="px-6 md:px-8 py-2 bg-blue-500 rounded-lg text-white hover:bg-blue-400 duration-200 text-sm md:text-base">Sign Up</a>
+                <a href="{{route('login')}}" class="px-6 md:px-8 py-2 border border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-500 hover:text-white duration-200 text-sm md:text-base">Sign In</a>
+                <a href="{{route('register')}}" class="px-6 md:px-8 py-2 bg-blue-500 rounded-lg text-white hover:bg-blue-400 duration-200 text-sm md:text-base">Sign Up</a>
             </div>
         </div>
     </div>
@@ -139,10 +139,10 @@
                 <a href="{{ route('pricing') }}" class="text-lg text-gray-900 hover:text-blue-500 duration-200">Pricing</a>
             </li>
             <li>
-                <a href="#" class="px-6 py-2 border border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-500 hover:text-white duration-200 text-sm">Sign In</a>
+                <a href="{{route('login')}}" class="px-6 py-2 border border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-500 hover:text-white duration-200 text-sm">Sign In</a>
             </li>
             <li>
-                <a href="#" class="px-6 py-2 bg-blue-500 rounded-lg text-white hover:bg-blue-400 duration-200 text-sm">Sign Up</a>
+                <a href="{{route('register')}}" class="px-6 py-2 bg-blue-500 rounded-lg text-white hover:bg-blue-400 duration-200 text-sm">Sign Up</a>
             </li>
         </ul>
     </div>

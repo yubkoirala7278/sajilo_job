@@ -80,7 +80,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'email_verified_at'=>now()
+            'email_verified_at' => now()
         ]);
 
         if ($data['role'] === 'employee') {
@@ -92,6 +92,9 @@ class RegisterController extends Controller
             Employer::create([
                 'user_id' => $user->id,
                 'contact_number' => $data['mobile_no'],
+                'is_trial_active' => true,
+                'trial_ends_at' => now()->addMonth(),
+                'subscription_status' => 'trial',
             ]);
         }
         $user->assignRole($data['role']);

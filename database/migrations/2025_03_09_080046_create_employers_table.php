@@ -23,6 +23,12 @@ return new class extends Migration
             $table->string('company_website')->nullable();
             $table->string('company_address')->nullable();
 
+            // Subscription fields
+            $table->boolean('is_trial_active')->default(true); // Tracks if trial is active
+            $table->timestamp('trial_ends_at')->nullable(); // Trial expiry date
+            $table->timestamp('subscription_ends_at')->nullable(); // Subscription expiry date
+            $table->enum('subscription_status', ['trial', 'active', 'expired'])->default('trial');
+
             $table->timestamps();
         });
     }

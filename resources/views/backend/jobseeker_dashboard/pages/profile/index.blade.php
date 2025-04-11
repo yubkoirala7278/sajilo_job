@@ -83,92 +83,91 @@
 
         <div class="row mt-4">
             <div class="col-12">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fs-6 fw-bold">Matching Jobs</h5>
-                    <a href="" class="text-decoration-none">View All</a>
+                    <input type="text" class="form-control w-auto " id="job-search"
+                        placeholder="Search...">
                 </div>
 
-                <div class="mt-3">
-                    <div class="table-responsive">
-                        <table class="table" id="jobs-table">
-                            <thead class="light-gray-bg">
-                                <tr>
-                                    <th class="light-gray-bg" scope="col">Job Title</th>
-                                    <th class="light-gray-bg" scope="col">Company</th>
-                                    <th class="light-gray-bg" scope="col">Category</th>
-                                    <th class="light-gray-bg" scope="col">Level</th>
-                                    <th class="light-gray-bg" scope="col">Type</th>
-                                    <th class="light-gray-bg" scope="col">Vacancies</th>
-                                    <th class="light-gray-bg" scope="col">Location</th>
-                                    <th class="light-gray-bg" scope="col">Salary</th>
-                                    <th class="light-gray-bg" scope="col">Posted</th>
-                                    <th class="light-gray-bg" scope="col">Deadline</th>
-                                    <th class="light-gray-bg" scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="jobs-tbody">
-                                @if ($jobs->count() > 0)
-                                    @foreach ($jobs as $job)
-                                        <tr style="white-space: nowrap">
-                                            <th scope="row">{{ $job->job_title }}</th>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <div class="d-grid place-content-center">
-                                                        <img src="{{ $job->company_logo_url }}"
-                                                            style="width: 60px; height: 50px;" class="rounded-4"
-                                                            alt="Company Logo">
-                                                    </div>
-                                                    <div class="contain">
-                                                        <h5 class="m-0 fs-6 fw-bold">{{ $job->user->name }}</h5>
-                                                        <p class="m-0 small-font light-gray-color">
-                                                            <i class="fa-solid fa-location-dot me-1"></i>
-                                                            {{ $job->job_location }}
-                                                        </p>
-                                                    </div>
+                <div class="table-responsive">
+                    <table class="table" id="jobs-table">
+                        <thead class="light-gray-bg">
+                            <tr>
+                                <th class="light-gray-bg" scope="col">Job Title</th>
+                                <th class="light-gray-bg" scope="col">Company</th>
+                                <th class="light-gray-bg" scope="col">Category</th>
+                                <th class="light-gray-bg" scope="col">Level</th>
+                                <th class="light-gray-bg" scope="col">Type</th>
+                                <th class="light-gray-bg" scope="col">Vacancies</th>
+                                <th class="light-gray-bg" scope="col">Location</th>
+                                <th class="light-gray-bg" scope="col">Salary</th>
+                                <th class="light-gray-bg" scope="col">Posted</th>
+                                <th class="light-gray-bg" scope="col">Deadline</th>
+                                <th class="light-gray-bg" scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobs-tbody">
+                            @if ($jobs->count() > 0)
+                                @foreach ($jobs as $job)
+                                    <tr style="white-space: nowrap">
+                                        <th scope="row">{{ $job->job_title }}</th>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="d-grid place-content-center">
+                                                    <img src="{{ $job->company_logo_url }}"
+                                                        style="width: 60px; height: 50px;" class="rounded-4"
+                                                        alt="Company Logo">
                                                 </div>
-                                            </td>
-                                            <td>{{ $job->category ? $job->category->category : '-' }}</td>
-                                            <td>{{ $job->job_level }}</td>
-                                            <td>{{ $job->employment_type }}</td>
-                                            <td>{{ $job->no_of_vacancy }}</td>
-                                            <td>{{ $job->job_country }}, {{ $job->job_location }}</td>
-                                            <td>{{ $job->is_negotiable ? 'Negotiable' : $job->offered_salary ?? 'Not Specified' }}
-                                            </td>
-                                            <td>{{ $job->posted_at->format('M d, Y') }}</td>
-                                            <td>{{ $job->expiry_date ? $job->expiry_date->format('M d, Y') : 'N/A' }}</td>
-                                            <td class="d-flex flex-column gap-1">
-                                                @if (!$job->hasApplied)
-                                                    @if (!$job->isInterested)
-                                                        <button class="btn btn-sm btn-warning d-block interested-btn"
-                                                            data-slug="{{ $job->slug }}">Interested</button>
-                                                    @else
-                                                        <span class="btn btn-sm btn-warning d-block disabled">Already
-                                                            Interested</span>
-                                                    @endif
-                                                    <button class="btn btn-sm btn-primary d-block apply-now-btn"
-                                                        data-slug="{{ $job->slug }}">Apply Now</button>
+                                                <div class="contain">
+                                                    <h5 class="m-0 fs-6 fw-bold">{{ $job->user->name }}</h5>
+                                                    <p class="m-0 small-font light-gray-color">
+                                                        <i class="fa-solid fa-location-dot me-1"></i>
+                                                        {{ $job->job_location }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ $job->category ? $job->category->category : '-' }}</td>
+                                        <td>{{ $job->job_level }}</td>
+                                        <td>{{ $job->employment_type }}</td>
+                                        <td>{{ $job->no_of_vacancy }}</td>
+                                        <td>{{ $job->job_country }}, {{ $job->job_location }}</td>
+                                        <td>{{ $job->is_negotiable ? 'Negotiable' : $job->offered_salary ?? 'Not Specified' }}
+                                        </td>
+                                        <td>{{ $job->posted_at->format('M d, Y') }}</td>
+                                        <td>{{ $job->expiry_date ? $job->expiry_date->format('M d, Y') : 'N/A' }}</td>
+                                        <td class="d-flex flex-column gap-1">
+                                            @if (!$job->hasApplied)
+                                                @if (!$job->isInterested)
+                                                    <button class="btn btn-sm btn-warning d-block interested-btn"
+                                                        data-slug="{{ $job->slug }}">Interested</button>
                                                 @else
-                                                    <span class="btn btn-sm btn-secondary d-block disabled">Already
-                                                        Applied</span>
+                                                    <span class="btn btn-sm btn-warning d-block disabled">Already
+                                                        Interested</span>
                                                 @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr class="text-center">
-                                        <td colspan="11">No jobs to display...</td>
+                                                <button class="btn btn-sm btn-primary d-block apply-now-btn"
+                                                    data-slug="{{ $job->slug }}">Apply Now</button>
+                                            @else
+                                                <span class="btn btn-sm btn-secondary d-block disabled">Already
+                                                    Applied</span>
+                                            @endif
+                                        </td>
                                     </tr>
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
+                                @endforeach
+                            @else
+                                <tr class="text-center">
+                                    <td colspan="11">No jobs to display...</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
 
-                    <div class="text-center mt-3">
-                        @if ($jobs->hasMorePages())
-                            <button id="load-more-btn" class="btn btn-primary"
-                                data-next-page="{{ $jobs->nextPageUrl() }}">Load More</button>
-                        @endif
-                    </div>
+                <div class="text-center mt-3" id="load-more-container">
+                    @if ($jobs->hasMorePages())
+                        <button id="load-more-btn" class="btn btn-primary" data-next-page="{{ $jobs->nextPageUrl() }}">Load
+                            More</button>
+                    @endif
                 </div>
             </div>
 
@@ -207,7 +206,7 @@
                                                             <span
                                                                 class="batch-blue">{{ $application->job->employment_type ===
                                                                 'Full
-                                                                                                                                                                                    Time'
+                                                                                                                                                                                                                                                    Time'
                                                                     ? 'Remote'
                                                                     : $application->job->employment_type }}</span>
                                                         </h5>
@@ -250,8 +249,21 @@
 @push('script')
     <script>
         $(document).ready(function() {
-            var nextPageUrl = $('#load-more-btn').data('next-page');
+            let nextPageUrl = $('#load-more-btn').data('next-page');
+            let typingTimer;
+            const doneTypingInterval = 500; // Delay in ms before search triggers
 
+            // Search on keyup with debounce
+            $('#job-search').on('keyup', function() {
+                clearTimeout(typingTimer);
+                let searchTerm = $(this).val().trim();
+
+                typingTimer = setTimeout(function() {
+                    searchJobs(searchTerm);
+                }, doneTypingInterval);
+            });
+
+            // Load More button
             $('#load-more-btn').on('click', function() {
                 if (!nextPageUrl) return;
 
@@ -265,53 +277,12 @@
                             'disabled', true);
                     },
                     success: function(response) {
-                        var jobs = response.jobs;
+                        appendJobs(response.jobs);
                         nextPageUrl = response.next_page_url;
-
-                        if (jobs.length > 0) {
-                            jobs.forEach(function(job) {
-                                var row = `
-                                <tr style="white-space: nowrap">
-                                    <th scope="row">${job.job_title}</th>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="d-grid place-content-center">
-                                                <img src="${job.company_logo_url}"
-                                                     style="width: 60px; height: 50px;" class="rounded-4" alt="">
-                                            </div>
-                                            <div class="contain">
-                                                <h5 class="m-0 fs-6 fw-bold">${job.user.name}</h5>
-                                                <p class="m-0 small-font light-gray-color">
-                                                    <i class="fa-solid fa-location-dot me-1"></i> ${job.job_location}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>${job.category ? job.category.category : '-'}</td>
-                                    <td>${job.job_level}</td>
-                                    <td>${job.employment_type}</td>
-                                    <td>${job.no_of_vacancy}</td>
-                                    <td>${job.job_country}, ${job.job_location}</td>
-                                    <td>${job.is_negotiable ? 'Negotiable' : (job.offered_salary || 'Not Specified')}</td>
-                                    <td>${new Date(job.posted_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</td>
-                                    <td>${job.expiry_date ? new Date(job.expiry_date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'N/A'}</td>
-                                    <td class="d-flex flex-column gap-1">
-                                        ${job.hasApplied ? 
-                                            '<span class="btn btn-sm btn-secondary d-block disabled">Already Applied</span>' : 
-                                            (job.isInterested ? 
-                                                '<span class="btn btn-sm btn-warning d-block disabled">Already Interested</span>' : 
-                                                '<button class="btn btn-sm btn-warning d-block interested-btn" data-slug="' + job.slug + '">Interested</button>') +
-                                            '<button class="btn btn-sm btn-primary d-block apply-now-btn" data-slug="' + job.slug + '">Apply Now</button>'}
-                                    </td>
-                                </tr>`;
-                                $('#jobs-tbody').append(row);
-                            });
-
-                            if (!nextPageUrl) {
-                                $('#load-more-btn').remove();
-                            } else {
-                                $('#load-more-btn').data('next-page', nextPageUrl);
-                            }
+                        if (!nextPageUrl) {
+                            $('#load-more-btn').remove();
+                        } else {
+                            $('#load-more-btn').data('next-page', nextPageUrl);
                         }
                         $('#load-more-btn').html('Load More').prop('disabled', false);
                     },
@@ -322,7 +293,88 @@
                 });
             });
 
-            // Interested AJAX
+            // Search function
+            function searchJobs(searchTerm) {
+                $.ajax({
+                    url: '{{ route('admin.home') }}', 
+                    type: 'GET',
+                    data: {
+                        search: searchTerm
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        $('#jobs-tbody').html(
+                            '<tr><td colspan="11" class="text-center"><i class="fa fa-spinner fa-spin"></i> Searching...</td></tr>'
+                            );
+                        $('#load-more-container').empty();
+                    },
+                    success: function(response) {
+                        $('#jobs-tbody').empty();
+                        if (response.jobs.length > 0) {
+                            appendJobs(response.jobs);
+                            nextPageUrl = response.next_page_url;
+                            if (nextPageUrl) {
+                                $('#load-more-container').html(
+                                    `<button id="load-more-btn" class="btn btn-primary" data-next-page="${nextPageUrl}">Load More</button>`
+                                );
+                            }
+                        } else {
+                            $('#jobs-tbody').html(
+                                '<tr class="text-center"><td colspan="11">No matching jobs found...</td></tr>'
+                                );
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log('Error:', xhr);
+                        $('#jobs-tbody').html(
+                            '<tr class="text-center"><td colspan="11">Error loading jobs...</td></tr>'
+                            );
+                    }
+                });
+            }
+
+            // Append jobs to table
+            function appendJobs(jobs) {
+                jobs.forEach(function(job) {
+                    var row = `
+                    <tr style="white-space: nowrap">
+                        <th scope="row">${job.job_title}</th>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="d-grid place-content-center">
+                                    <img src="${job.company_logo_url}"
+                                         style="width: 60px; height: 50px;" class="rounded-4" alt="">
+                                </div>
+                                <div class="contain">
+                                    <h5 class="m-0 fs-6 fw-bold">${job.user.name}</h5>
+                                    <p class="m-0 small-font light-gray-color">
+                                        <i class="fa-solid fa-location-dot me-1"></i> ${job.job_location}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${job.category ? job.category.category : '-'}</td>
+                        <td>${job.job_level}</td>
+                        <td>${job.employment_type}</td>
+                        <td>${job.no_of_vacancy}</td>
+                        <td>${job.job_country}, ${job.job_location}</td>
+                        <td>${job.is_negotiable ? 'Negotiable' : (job.offered_salary || 'Not Specified')}</td>
+                        <td>${new Date(job.posted_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</td>
+                        <td>${job.expiry_date ? new Date(job.expiry_date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'N/A'}</td>
+                        <td class="d-flex flex-column gap-1">
+                            ${job.hasApplied ? 
+                                '<span class="btn btn-sm btn-secondary d-block disabled">Already Applied</span>' : 
+                                (job.isInterested ? 
+                                    '<span class="btn btn-sm btn-warning d-block disabled">Already Interested</span>' : 
+                                    '<button class="btn btn-sm btn-warning d-block interested-btn" data-slug="' + job.slug + '">Interested</button>') +
+                                '<button class="btn btn-sm btn-primary d-block apply-now-btn" data-slug="' + job.slug + '">Apply Now</button>'}
+                        </td>
+                    </tr>`;
+                    $('#jobs-tbody').append(row);
+                });
+            }
+
+            // Interested AJAX (unchanged)
             $(document).on('click', '.interested-btn', function(e) {
                 e.preventDefault();
                 var slug = $(this).data('slug');
@@ -347,7 +399,7 @@
                             beforeSend: function() {
                                 button.prop('disabled', true).html(
                                     '<i class="fa fa-spinner fa-spin"></i> Marking...'
-                                );
+                                    );
                             },
                             success: function(response) {
                                 Swal.fire('Success!', response.message, 'success');
@@ -365,7 +417,7 @@
                 });
             });
 
-            // Apply Now AJAX
+            // Apply Now AJAX (unchanged)
             $(document).on('click', '.apply-now-btn', function(e) {
                 e.preventDefault();
                 var slug = $(this).data('slug');
@@ -390,7 +442,7 @@
                             beforeSend: function() {
                                 button.prop('disabled', true).html(
                                     '<i class="fa fa-spinner fa-spin"></i> Applying...'
-                                );
+                                    );
                             },
                             success: function(response) {
                                 Swal.fire('Success!', response.message, 'success');

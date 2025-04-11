@@ -34,4 +34,11 @@ class JobCategory extends Model
     {
         return $this->belongsToMany(Employee::class, 'employee_job_category');
     }
+
+    // Relationship with employers
+    public function jobCategories()
+    {
+        return $this->belongsToMany(JobCategory::class, 'employer_job_category', 'employer_id', 'job_category_id')
+                    ->withTimestamps();
+    }
 }

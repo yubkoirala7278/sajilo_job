@@ -14,7 +14,7 @@
             background-color: #f5f5f5;
         }
 
-        td {
+        tr {
             white-space: nowrap;
         }
     </style>
@@ -27,7 +27,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0" style="color: #2C3E50">Job Listings</h4>
+                        <h4 class="mb-0" style="color: #2C3E50">Expired Job Listings</h4>
                         <a href="{{ route('job.create') }}" class="btn btn-primary btn-sm rounded-pill px-3">
                             <i class="fa fa-plus me-2"></i>Add New Job
                         </a>
